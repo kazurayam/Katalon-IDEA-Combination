@@ -3,15 +3,16 @@ plugins {
 }
 
 group = 'io.github.kazurayam'
-version = '0.1.0'
+version = '0.1.1-SNAPSHOT'
 
 import org.gradle.internal.os.OperatingSystem
 String resolveKatalonStudioInstallationDirectory() {
     OperatingSystem os = OperatingSystem.current()
     if (os.isMacOsX()) {
-        return '/Applications/Katalon Studio.app'
+        return '/Applications/Katalon Studio.app/Contents/Eclipse'
     } else if (os.isWindows()) {
-        throw new UnsupportedOperationException('To be considered')
+        String userHome = System.getProperty("user.home")
+        return "${userHome}/Katalon_Studio_Windows_64-10.2.0"
     } else if (os.isLinux()) {
         throw new UnsupportedOperationException("I don't know")
     } else {
@@ -31,15 +32,17 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.kazurayam/monk-directory-scanner
     implementation 'com.kazurayam:monk-directory-scanner:0.1.1'
-    implementation fileTree(
-            dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/Contents/Eclipse/configuration/resources/lib",
+
+    // will look into the Katalon Studio installation directory
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/configuration/resources/lib",
             include: [
                     "groovy-${GroovyVersion}.jar"
             ]
     )
     // look into the `katalon/.classpath` file for the paths of jar to include from the Katalon bundle
-    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/Contents/Eclipse/plugins",
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
             include: [
                     'com.fasterxml.jackson*.jar',
                     'com.google.gson*.jar',
@@ -74,6 +77,12 @@ java {
 
 test {
     useTestNG()
+}
+
+tasks.register('printKatalonInstallation') {
+    doLast {
+        println KATALON_STUDIO_INSTALLATION_DIRECTORY
+    }
 }
 
 tasks.register('printVersions') {
