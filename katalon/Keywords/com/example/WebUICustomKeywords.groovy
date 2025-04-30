@@ -16,7 +16,7 @@ import com.kms.katalon.core.testobject.ResponseObject
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords
 
 
-public class WebUICustomKeywords {
+class WebUICustomKeywords {
 
 	/**
 	 * Check if element present in timeout
@@ -38,7 +38,7 @@ public class WebUICustomKeywords {
 	 * @return All rows inside HTML table 
 	 */
 	@Keyword
-	def List<WebElement> getHtmlTableRows(TestObject table, String outerTagName) {
+    List<WebElement> getHtmlTableRows(TestObject table, String outerTagName) {
 		WebElement mailList = WebUiBuiltInKeywords.findWebElement(table)
 		List<WebElement> selectedRows = mailList.findElements(By.xpath("./" + outerTagName + "/tr"))
 		return selectedRows
@@ -51,7 +51,7 @@ public class WebUICustomKeywords {
 	 * @return All cells inside HTML table row 
 	 */
 	@Keyword
-	def List<WebElement> getHtmlTableColumns(WebElement row, String tagName) {
+    List<WebElement> getHtmlTableColumns(WebElement row, String tagName) {
 		List<WebElement> selectedColumns = row.findElements(By.tagName(tagName))
 		return selectedColumns
 	}

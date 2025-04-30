@@ -6,6 +6,8 @@
    <UUID>613d4fc7-d76f-4d90-acac-6b7552b90ef3</UUID>
    <freeLicense>true</freeLicense>
    <migratedVersion>5.9.0</migratedVersion>
+   <modifiedEdition>FREE</modifiedEdition>
+   <modifiedVersion>10.2.0</modifiedVersion>
    <pageLoadTimeout>0</pageLoadTimeout>
    <projectFileLocation>/Users/kazuakiurayama/github/KatalonProjectAsSubprojectInGradleMultiproject/katalon/healthcare.prj</projectFileLocation>
    <sourceContent>
