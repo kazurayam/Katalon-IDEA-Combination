@@ -12,7 +12,7 @@ import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.UrlEncodedBodyParameter
 import com.kms.katalon.core.webservice.common.ServiceRequestFactory
 import com.kms.katalon.util.CryptoUtil
-import com.kms.katalon.core.util.internal.JsonUtil;
+import com.kms.katalon.core.util.internal.JsonUtil
 
 import groovy.json.JsonSlurper
 
@@ -23,46 +23,46 @@ trait IgnoreUnknownProperties {
 }
 
 class Project implements IgnoreUnknownProperties {
-	Long id;
-	String name;
-	Long teamId;
+	Long id
+	String name
+	Long teamId
 }
 
 class Team implements IgnoreUnknownProperties {
-	Long id;
-	String role;
-	String name;
-	Organization organization;
+	Long id
+	String role
+	String name
+	Organization organization
 }
 
 class Organization implements IgnoreUnknownProperties {
-	Long id;
-	String role;
-	String name;
+	Long id
+	String role
+	String name
 }
 
 
-public class KatalonHelper {
+class KatalonHelper {
 
 	private static final String DEFAULT_SERVER_URL = "https://analytics.katalon.com"
-	private static final String HEADER_VALUE_AUTHORIZATION_PREFIX = "Bearer ";
-	private static final String HEADER_AUTHORIZATION = "Authorization";
-	private static final String HEADER_AUTHORIZATION_PREFIX = "Basic ";
-	private static final String OAUTH2_CLIENT_ID = "kit_uploader";
-	private static final String OAUTH2_CLIENT_SECRET = "kit_uploader";
+	private static final String HEADER_VALUE_AUTHORIZATION_PREFIX = "Bearer "
+	private static final String HEADER_AUTHORIZATION = "Authorization"
+	private static final String HEADER_AUTHORIZATION_PREFIX = "Basic "
+	private static final String OAUTH2_CLIENT_ID = "kit_uploader"
+	private static final String OAUTH2_CLIENT_SECRET = "kit_uploader"
 
 
-	private static final String LOGIN_PARAM_PASSWORD = "password";
-	private static final String LOGIN_PARAM_USERNAME = "username";
-	private static final String LOGIN_PARAM_GRANT_TYPE_NAME = "grant_type";
-	private static final String LOGIN_PARAM_GRANT_TYPE_VALUE = "password";
+	private static final String LOGIN_PARAM_PASSWORD = "password"
+	private static final String LOGIN_PARAM_USERNAME = "username"
+	private static final String LOGIN_PARAM_GRANT_TYPE_NAME = "grant_type"
+	private static final String LOGIN_PARAM_GRANT_TYPE_VALUE = "password"
 
 
 	public static final String KATALON_HOME_ENV_NAME = "KATALON_HOME"
-	public static final String KATALON_HOME_DIR = System.getenv(KATALON_HOME_ENV_NAME) != null ? System.getenv(KATALON_HOME_ENV_NAME) : System.getProperty("user.home");
-	public static final String APP_USER_DIR_LOCATION = KATALON_HOME_DIR + File.separator + ".katalon";
+	public static final String KATALON_HOME_DIR = System.getenv(KATALON_HOME_ENV_NAME) != null ? System.getenv(KATALON_HOME_ENV_NAME) : System.getProperty("user.home")
+	public static final String APP_USER_DIR_LOCATION = KATALON_HOME_DIR + File.separator + ".katalon"
 
-	public static void updateInfo() {
+    static void updateInfo() {
 		try{
 			Path testOpsSettingsPath = Paths.get(RunConfiguration.getProjectDir(),
 					'settings', 'internal', 'com.kms.katalon.integration.analytics.properties')
@@ -95,16 +95,16 @@ public class KatalonHelper {
 		}
 	}
 
-	public static String getRawValue(String value) {
+    static String getRawValue(String value) {
 		if (value == null)
-			return null;
+			return null
 		else {
-			return "\"" + StringEscapeUtils.escapeJava((String) value) + "\"";
+			return "\"" + StringEscapeUtils.escapeJava((String) value) + "\""
 		}
 	}
 
 	private static String requestToken(serverUrl, username, password) {
-		String clientCredentials = OAUTH2_CLIENT_ID + ":" + OAUTH2_CLIENT_SECRET;
+		String clientCredentials = OAUTH2_CLIENT_ID + ":" + OAUTH2_CLIENT_SECRET
 		String url = serverUrl + "/oauth/token"
 		def builder = new RestRequestObjectBuilder()
 		def request = builder
@@ -159,7 +159,7 @@ public class KatalonHelper {
 
 	private static Properties getUserProperties() {
 		Path path = Paths.get(APP_USER_DIR_LOCATION, 'application.properties')
-		File file = path.toFile();
+		File file = path.toFile()
 		InputStream inputStream = new FileInputStream(file)
 		Properties properties = new Properties()
 		properties.load(inputStream)

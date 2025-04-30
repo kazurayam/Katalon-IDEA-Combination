@@ -1,0 +1,52 @@
+plugins {
+    id("com.katalon.gradle-plugin") version "0.1.2"
+}
+
+// run "$ gradle :katalon:katalonCopyDependencies" command to download
+// the monk-directory-scanner-0.1.1.jar into the "Drivers" folder
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.kazurayam:monk-directory-scanner:0.1.1")
+}
+
+ext {
+    LibVersion = '0.1.0'
+}
+
+tasks.register('cleanDrivers') {
+    group = 'Custom'
+    description = 'remove jars out of the Drivers folder'
+    doFirst {
+        delete 'Drivers'
+        mkdir 'Drivers'
+    }
+}
+
+tasks.register('importDrivers') {
+    group = 'Custom'
+    description = 'import the jar from the lib subproject'
+    doLast {
+        copy {
+            into layout.projectDirectory.dir('Drivers')
+            from("${rootProject.projectDir}/lib/build/libs") {
+                include 'my-ks-helper-*.jar'
+            }
+        }
+    }
+    dependsOn 'cleanDrivers', 'katalonCopyDependencies'
+}
+
+tasks.register('cleanProject', Delete) {
+    group = 'Custom'
+    description = 'remove the bin folder and others to clean up the Katalo project'
+    delete 'bin'
+    delete 'Libs'
+    delete '.cache'
+}
+
+
+
