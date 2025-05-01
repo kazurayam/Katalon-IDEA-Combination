@@ -17,27 +17,39 @@ ext {
     LibVersion = '0.1.0'
 }
 
-tasks.register('cleanDrivers') {
+tasks.register('importMonkDirectoryScanner') {
     group = 'Custom'
-    description = 'remove jars out of the Drivers folder'
+    description = 'import the MonkDirectoryScanner into the Drivers folder'
     doFirst {
-        delete 'Drivers'
-        mkdir 'Drivers'
+        delete fileTree("Drivers").matching {
+            include "*monk-directory-scanner-*.jar"
+        }
+    }
+}
+importMonkDirectoryScanner.finalizedBy katalonCopyDependencies
+
+tasks.register('importLibArtifact') {
+    group = 'Custom'
+    description = "import the KS_ObjectRepositoryGarbageCollector jar and the MockDirectoryScanner jar into the Drivers folder"
+    doFirst {
+        delete fileTree("Drivers").matching {
+            include "my-ks-helper-*.jar"
+        }
+    }
+    doLast {
+        copy {
+            into layout.projectDirectory.dir("Drivers")
+            from("${rootProject.projectDir}/lib/build/libs") {
+                include "my-ks-helper-${LibVersion}*.jar"
+            }
+        }
     }
 }
 
 tasks.register('importDrivers') {
     group = 'Custom'
-    description = 'import the jar from the lib subproject'
-    doLast {
-        copy {
-            into layout.projectDirectory.dir('Drivers')
-            from("${rootProject.projectDir}/lib/build/libs") {
-                include 'my-ks-helper-*.jar'
-            }
-        }
-    }
-    dependsOn 'cleanDrivers', 'katalonCopyDependencies'
+    description = 'run importLibArtifact and importMonDirectoryScanner'
+    dependsOn importLibArtifact, importMonkDirectoryScanner
 }
 
 tasks.register('cleanProject', Delete) {

@@ -6,7 +6,7 @@ group = 'io.github.kazurayam'
 version = '0.1.1-SNAPSHOT'
 
 import org.gradle.internal.os.OperatingSystem
-String resolveKatalonStudioInstallationDirectory() {
+static String resolveKatalonStudioInstallationDirectory() {
     OperatingSystem os = OperatingSystem.current()
     if (os.isMacOsX()) {
         return '/Applications/Katalon Studio.app/Contents/Eclipse'
@@ -16,7 +16,7 @@ String resolveKatalonStudioInstallationDirectory() {
     } else if (os.isLinux()) {
         throw new UnsupportedOperationException("I don't know")
     } else {
-        // Unknow OS
+        // Unknown OS
         throw new UnsupportedOperationException("Who knows?")
     }
 }
@@ -116,6 +116,6 @@ groovydoc.finalizedBy publishGroovydoc
 
 jar {
     archiveBaseName = "${ARTIFACT_ID}"
-    include('io/github/kazurayam/**')
-    exclude('internal/**')
+    include('io/github/kazurayam/**' as String)
+    exclude('internal/**' as String)
 }
