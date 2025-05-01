@@ -54,7 +54,7 @@ tasks.register('importDrivers') {
 
 tasks.register('cleanProject', Delete) {
     group = 'Custom'
-    description = 'remove the bin folder and others to clean up the Katalo project'
+    description = 'remove the bin folder and others to clean up the Katalon project'
     delete 'bin'
     delete 'Libs'
     delete '.cache'
