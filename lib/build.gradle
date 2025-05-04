@@ -32,8 +32,7 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.kazurayam/monk-directory-scanner
-    implementation 'com.kazurayam:monk-directory-scanner:0.1.1'
+    implementation libs.directoryscanner
 
     // will look into the Katalon Studio installation directory
     implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/configuration/resources/lib",
@@ -85,12 +84,15 @@ tasks.register('printKatalonInstallation') {
     }
 }
 
+import org.gradle.internal.os.OperatingSystem
+import org.gradle.util.GradleVersion
 tasks.register('printVersions') {
     doLast {
         OperatingSystem os = OperatingSystem.current()
-        println "OS: ${os.toString()}"
-        println "Gradle: ${project.getGradle().getGradleVersion()}"
-        println "Groovy: ${GroovySystem.getVersion()}"
+        println "${os.toString()}"
+        println "Java ${JavaVersion.current()}"
+        println "Groovy ${GroovySystem.getVersion()}"
+        println GradleVersion.current().toString()
     }
 }
 
@@ -116,6 +118,6 @@ groovydoc.finalizedBy publishGroovydoc
 
 jar {
     archiveBaseName = "${ARTIFACT_ID}"
-    include('io/github/kazurayam/**' as String)
-    exclude('internal/**' as String)
+    include('io/github/kazurayam/**')
+    exclude('internal/**')
 }
