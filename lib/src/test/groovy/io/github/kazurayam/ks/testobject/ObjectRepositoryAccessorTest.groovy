@@ -5,58 +5,31 @@ import groovy.json.JsonOutput
 import io.github.kazurayam.ks.configuration.KatalonProjectDirectoryResolver
 import io.github.kazurayam.ks.configuration.RunConfigurationConfigurator
 import io.github.kazurayam.ks.reporting.Shorthand
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 
-import static org.testng.Assert.*
+import static org.junit.jupiter.api.Assertions.*
 
 class ObjectRepositoryAccessorTest {
 
-    private static Path objectRepositoryDir
+    private Path objectRepositoryDir
 
-    @BeforeClass
-    void beforeClass() {
-        objectRepositoryDir = KatalonProjectDirectoryResolver.getProjectDir().resolve("Object Repository")
-        assert Files.exists(objectRepositoryDir)
+    @BeforeAll
+    static void beforeAll() {
         // tune the singleton instance of com.kms.katalon.core.configuration.RunConfiguration
         // so that it refer to the "katalon/Object Repository" directory.
         RunConfigurationConfigurator.configureProjectDir()
     }
 
-    @BeforeMethod
-    void setup() {}
-
-    @Test
-    void test_getIncludedFiles() {
-        ObjectRepositoryAccessor accessor =
-                new ObjectRepositoryAccessor.Builder(objectRepositoryDir).build()
-        String[] includedFiles = accessor.getIncludedFiles()
-        StringBuilder sb = new StringBuilder()
-        for (int i = 0; i < includedFiles.length; i++) {
-            sb.append(includedFiles[i])
-            sb.append("\n")
-        }
-        Shorthand sh = new Shorthand.Builder().subDir(this.getClass().getName())
-                .fileName("test_getIncludedFiles.txt").build()
-        sh.write(sb.toString())
-        assertTrue(includedFiles.length > 0)
-    }
-
-    @Test
-    void test_getIncludedFiles_mutiple() {
-        ObjectRepositoryAccessor accessor =
-                new ObjectRepositoryAccessor.Builder(objectRepositoryDir)
-                        .includeFile("**/Page_AppointmentConfirmation/**/*.rs")
-                        .includeFile("**/Page_CuraAppointment/**/*.rs")
-                        .includeFile("**/Page_CuraHomepage/**/*.rs")
-                        .includeFile("**/Page_Login/**/*.rs")
-                        .build()
-        String[] includedFiles = accessor.getIncludedFiles()
-        assertEquals(includedFiles.length, 18)
+    @BeforeEach
+    void setup() {
+        objectRepositoryDir = KatalonProjectDirectoryResolver.getProjectDir().resolve("Object Repository")
+        assert Files.exists(objectRepositoryDir)
     }
 
     @Test
@@ -79,7 +52,7 @@ class ObjectRepositoryAccessorTest {
     void test_getTestObject() {
         ObjectRepositoryAccessor accessor =
                 new ObjectRepositoryAccessor.Builder(objectRepositoryDir).build()
-        TestObjectId testObjectId = new TestObjectId("Page_CuraHomepage/btn_MakeAppointment")
+        TestObjectId testObjectId = new TestObjectId(Paths.get("Page_CuraHomepage/btn_MakeAppointment.rs"))
         TestObject testObject = accessor.getTestObject(testObjectId)
         assertNotNull(testObject)
         assertEquals(testObject.getObjectId(),

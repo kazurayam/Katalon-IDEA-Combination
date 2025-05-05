@@ -5,7 +5,6 @@ plugins {
 group = 'io.github.kazurayam'
 version = '0.1.1-SNAPSHOT'
 
-import org.gradle.internal.os.OperatingSystem
 static String resolveKatalonStudioInstallationDirectory() {
     OperatingSystem os = OperatingSystem.current()
     if (os.isMacOsX()) {
@@ -32,7 +31,6 @@ repositories {
 }
 
 dependencies {
-    implementation libs.directoryscanner
 
     // will look into the Katalon Studio installation directory
     implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/configuration/resources/lib",
@@ -62,9 +60,13 @@ dependencies {
                     'slf4j*.jar'
             ])
 
+    implementation libs.directoryscanner
+
     // will look into the Maven Central repository
-    testImplementation("org.testng:testng:7.11.0")
-    testImplementation 'org.slf4j:slf4j-simple:2.0.16'
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.engine
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation libs.slf4j.simple
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -75,7 +77,7 @@ java {
 }
 
 test {
-    useTestNG()
+    useJUnitPlatform()
 }
 
 tasks.register('printKatalonInstallation') {

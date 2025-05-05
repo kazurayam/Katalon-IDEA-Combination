@@ -1,8 +1,10 @@
 package io.github.kazurayam.ks.configuration
 
-import org.testng.annotations.Test
-import static org.testng.Assert.*
+import org.junit.jupiter.api.Test
+
 import java.nio.file.Path
+
+import static org.junit.jupiter.api.Assertions.assertNotNull
 
 class KatalonProjectDirectoryResolverTest {
 

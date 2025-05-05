@@ -7,6 +7,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
  * ObjectRepositoryAccessor requires the path of "Object Repository" folder in a
@@ -46,7 +47,8 @@ class ObjectRepositoryAccessor {
         List<TestObjectId> result = new ArrayList<>()
         for (int i = 0; i < includedFiles.length; i++) {
             if (includedFiles[i].endsWith(".rs")) {
-                TestObjectId toi = new TestObjectId(includedFiles[i].replaceAll('\\.rs$', ''))
+                Path relativePath = Paths.get(includedFiles[i])
+                TestObjectId toi = new TestObjectId(relativePath)
                 result.add(toi)
             } else {
                 logger.warn("found a file that does not end with '.rs'; ${includedFiles[i]}")
