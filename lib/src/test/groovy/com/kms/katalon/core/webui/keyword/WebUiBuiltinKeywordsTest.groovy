@@ -1,7 +1,6 @@
 package com.kms.katalon.core.webui.keyword
 
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
-
 import org.junit.jupiter.api.Test
 
 class WebUiBuiltinKeywordsTest {
