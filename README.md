@@ -120,7 +120,7 @@ $ tree -L 1 -F .
 ├── README.md
 ├── docs/
 ├── gradle/
-├── gradlew*
+├── gradlew
 ├── gradlew.bat
 ├── katalon/
 ├── lib/
@@ -319,17 +319,15 @@ class ObjectRepositoryFailingTest {
 }
 ```
 
-This unit-test class is located inside `lib` subproject aside from `katalon` subproject. This class wants to access the `Object Repository` folder in the `katalon` to get an instance of `com.kms.katalon.core.testobject.TestObject`.
+This unit-test class is located inside `lib` subproject aside from `katalon` subproject. This class wants to access the `Object Repository` folder in the `katalon` to get an instance of `com.kms.katalon.core.testobject.TestObject`. This unit-test class always fails. 
 
-*This unit-test class always fails.*
-
-Why? --- The class is not informed of the path of the `Object Repository` folder in the `kata` subproject.
+Why? --- The class is not informed of the path of the `Object Repository` folder in the `katalon` subproject. Therefore a call `ObjectRepository.findTestObjext(String)` returns null. 
 
 How can I tell the unit-tests in `lib` subproject` of the `Object Repository` path in `katalon` subproject?
 
-### `katalon` subproject` demands to import the artifact of the `lib` subproject
+### `katalon` subproject demands to import the artifact of the `lib` subproject
 
-Once I could resolve the above difficulties, I would be able to create a jar in the `lib` subproject.
+Once I could resolve the above difficulties, I would be able to create a jar in the `lib/build/libs` directory.
 
 ```
 $ gradle jar
@@ -339,19 +337,23 @@ lib/build/libs
 └── my-custom-artifact-0.1.1.jar
 ```
 
-I have to transfer this jar file form `lib` subproject into `katalon` subproject. Otherwise, Katalon Studio would not load the artifact at all. You can not use the custom Groovy classes developed in the `lib` subproject in Katalo Studio.
+However, Katalon Studio would not load the artifact at all. Katalon Studio does not recognize the jar file in the `lib` in the neighbourhood.
 
-Then, how can I export/import the artifact jar from `lib` to `katalon`?
+So, how can I export/import the artifact jar from `lib` to `katalon`?
 
 ## Resolution detail
 
-I have overcome all the aforementioned technical difficulties. It involves a lot of know-hows. A seperated detail documentation is required. See the [docs](https://kazurayam.github.io/Katalon-IDEA-Combination/).
+I have overcome all the aforementioned technical difficulties. See the [docs](https://kazurayam.github.io/Katalon-IDEA-Combination/) for know-hows.
+
+## Conclusion
+
+I have developed a way to develop Java/Groovy classes in IntelliJ IDEA using any unit-testing frameworks (JUnit4, JUnit Jupyter, TestNG, Spock) and utilize the library in a Katalon Studio project. I enjoy programming in IntelliJ IDEA. I would no longer use the `Keywords` folder in a Katalon project to develop extension libraries.  
 
 ## Environment I used
 
 - macOS SONOMA 14.7.5
 - IntelliJ IDEA 2024.2 (Ultimate Edition)
-- Katalon Studio 10.2.0 Free
+- Katalon Studio 10.2.0 Free, JDK 17 bundled
 - Groovy 3.0.24
 - Gradle 8.14
 - git version 2.45.2
