@@ -337,7 +337,7 @@ lib/build/libs
 └── my-custom-artifact-0.1.1.jar
 ```
 
-However, Katalon Studio would not load the artifact at all. Katalon Studio does not recognize the jar file in the `lib` in the neighbourhood.
+On the other hand, Katalon Studio does not recognize the jar file in the `lib` in the neighbourhood. Katalon Studio can only load jar files from the `Drivers` folder inside katalon project.
 
 So, how can I export/import the artifact jar from `lib` to `katalon`?
 
@@ -347,7 +347,9 @@ I have overcome all the aforementioned technical difficulties. See the [docs](ht
 
 ## Conclusion
 
-I have developed a way to develop Java/Groovy classes in IntelliJ IDEA using any unit-testing frameworks (JUnit4, JUnit Jupyter, TestNG, Spock) and utilize the library in a Katalon Studio project. I enjoy programming in IntelliJ IDEA. I would no longer use the `Keywords` folder in a Katalon project to develop extension libraries.  
+I have developed a way to develop Java/Groovy classes in IntelliJ IDEA using any unit-testing frameworks (JUnit4, JUnit Jupyter, TestNG, Spock) and utilize the library in a Katalon Studio project. Gradle build tool plays an essential role here. IntelliJ IDEA ensures me enjoyable programming experience. I feel contented with this combination of Katalon and IntelliJ IDEA. 
+
+So, I would no longer use the `Keywords` folder in a Katalon project to develop extension libraries.  
 
 ## Environment I used
 
