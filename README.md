@@ -12,7 +12,7 @@ One day, I worked on a [Katalon Studio](https://katalon.com/katalon-studio) proj
 
 Therefore I started developing a set of Groovy classes that help me identifying unused TestObject. I initiated my project **KS_ObjectRepositoryGarbageCollector**. See the project of its version 0.2.6, which is already outdated, as follows:
 
-- https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/tree/0.2.6
+- [KS_ObjectRepositoryGarbaseCollector 0.2.6](https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/tree/0.2.6)
 
 This project is a single Katalon Studio project. I created 21 `.groovy` files in the `Keywords` folder.
 
@@ -101,13 +101,15 @@ $ tree Include/scripts | grep .groovy | wc
 
 I used my "junit4ks" library to run the unit-tests for my custom Groovy classes. See
 
-- https://forum.katalon.com/t/running-junit4-in-katalon-studio/12270
+- [junit4ks](https://forum.katalon.com/t/running-junit4-in-katalon-studio/12270)
 
-I developed over 40 .groovy classes. Did I enjoy that? --- No. It was damn hard. 
+I ended up with over 40 .groovy classes. 
 
-Katalon Studio GUI has a lot of small but itchy problems for developing + unit-testing custom Groovy classes. I admired to do the same job in [IntelliJ IDEA](https://www.jetbrains.com/idea/). 
+**Did I enjoy that? --- No, I didn't. It was damn hard.** 
 
-But how can I do it in IntelliJ IDEA?
+Katalon Studio GUI has a lot of small itchy problems for developing & unit-testing custom Groovy classes. I admired to do the same job in my favorite IDE [IntelliJ IDEA](https://www.jetbrains.com/idea/). 
+
+**But, how can I combine Katalon Studio and IntelliJ IDEA?**
 
 ## Solution
 
@@ -157,7 +159,7 @@ $ tree -L 1 -F ./katalon
 
 Of course, I have no problem opening this project using Katalon Studio GUI, as follows:
 
-[1_katalon_subproject_opened_in_GUI](https://kazurayam.github.io/Developing_Custom_Classes_for_Katalon_project_using_JUnit5-Gradle-IntelliJ_IDEA/images/1_katalon_subproject_opened_in_GUI.png)
+![1_katalon_subproject_opened_in_GUI](https://kazurayam.github.io/Katalon-IDEA-Combination/images/1_katalon_subproject_opened_in_GUI.png)
 
 This Katalon project is generated from the official sample WebUI project "[healthcare](https://docs.katalon.com/katalon-studio/get-started/sample-projects/webui/sample-webui-project-healthcare-sample-in-katalon-studio)". There is nothing unusual.
 
