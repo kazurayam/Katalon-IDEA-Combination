@@ -10,8 +10,8 @@ dependencyResolutionManagement {
             library('junit-jupiter-engine', 'org.junit.jupiter:junit-jupiter-engine:5.12.2')
             library('slf4j-simple', 'org.slf4j:slf4j-simple:2.0.16')
         }
-    }x
+    }
 }
 
-rootProject.name = 'Developing_Custom_Classes_for_Katalon_project_using_JUnit5-Gradle-IntelliJ_IDEA'
+rootProject.name = 'Katalon-IDEA-Combination'
 include('lib', 'katalon')

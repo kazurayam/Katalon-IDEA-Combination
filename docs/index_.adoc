@@ -1,3 +1,7 @@
+= Katalon-IDEA-Combination details
+
+- link:https://www.github.com/kazurayam/Katalon-IDEA-Combination/[repository]
+
 == images
 
 link:images/1_katalon_subproject_opened_in_GUI.png[]

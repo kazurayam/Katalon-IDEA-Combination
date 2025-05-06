@@ -1,5 +1,7 @@
 # Developing Custom Classes for Katalon project using JUnit5 + Gradle + IntelliJ IDEA
 
+- [docs](https://kazurayam.github.io/Katalon-IDEA-Combination/)
+
 ## Forward
 
  This project assumes that you (the readers) have seasoned skill of Groovy programming with [JUnit5](https://junit.org/junit5/) and [Gradle](https://gradle.org/) build tool in [IntelliJ IDEA](https://www.jetbrains.com/idea/). If you are a non-programmer and/or new to Katalon Studio, this article would not be useful for you.
