@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'io.github.kazurayam'
-version = '0.1.1-SNAPSHOT'
+version = '0.1.1'
 
 static String resolveKatalonStudioInstallationDirectory() {
     OperatingSystem os = OperatingSystem.current()
@@ -23,7 +23,7 @@ static String resolveKatalonStudioInstallationDirectory() {
 ext {
     KATALON_STUDIO_INSTALLATION_DIRECTORY = resolveKatalonStudioInstallationDirectory()
     GroovyVersion = '3.0.17'
-    ARTIFACT_ID = 'my-ks-helper'
+    ARTIFACT_ID = 'my-custom-artifact'
 }
 
 repositories {

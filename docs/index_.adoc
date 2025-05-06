@@ -3,7 +3,10 @@
 - link:https://www.github.com/kazurayam/Katalon-IDEA-Combination/[repository]
 
 == images
+- link:images/0_rootProject_opened_in_IDEA.png[]
+- link:images/1_katalon_subproject_opened_in_GUI.png[]
 
-link:images/1_katalon_subproject_opened_in_GUI.png[]
+== References
 
-
+- https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/
+- https://forum.katalon.com/t/i-cant-run-unit-tests-with-junit-in-katalon-studio/120315/9
