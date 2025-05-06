@@ -56,9 +56,9 @@ $ tree Keywords | grep .groovy | wc
       21      60    1106
 ```
 
-These .groovy file comprises of my library that help finding unused entries in the `Object Repository` folder.
+These .groovy file comprises my library that help finding unused entries in the `Object Repository` folder.
 
-The library deserved a set of unit-tests. I developed a set of `*.groovy` files using JUnit4.
+The library deserved a set of unit-tests for better quality. I developed a set of `*.groovy` files using JUnit4.
 
 ```
 :~/tmp/KS_ObjectRepositoryGarbageCollector ((0.2.6))
@@ -99,7 +99,7 @@ $ tree Include/scripts | grep .groovy | wc
       21      58    1230
 ```
 
-I used my "junit4ks" library to run the unit-tests for my custom Groovy classes. See
+I used my "junit4ks" library to run the unit-tests for my custom Groovy classes inside Katalon Studio. See
 
 - [junit4ks](https://forum.katalon.com/t/running-junit4-in-katalon-studio/12270)
 
@@ -107,7 +107,7 @@ I ended up with over 40 .groovy classes.
 
 **Did I enjoy that? --- No, I didn't. It was damn hard.** 
 
-Katalon Studio GUI has a lot of small itchy problems for developing & unit-testing custom Groovy classes. I admired to do the same job in my favorite IDE [IntelliJ IDEA](https://www.jetbrains.com/idea/). 
+Katalon Studio GUI has a lot of problems for developing & unit-testing custom Groovy classes in the `Keywords` folder. I'm not going to go into detail about what's wrong with Katalon Studio here. I admired to do the same job in my favorite IDE [IntelliJ IDEA](https://www.jetbrains.com/idea/). 
 
 **But, how can I combine Katalon Studio and IntelliJ IDEA?**
 
@@ -130,6 +130,10 @@ $ tree -L 1 -F .
 
 5 directories, 4 files
 ```
+
+I can open this project using IntelliJ IDEA, as follows:
+
+![0](https://kazurayam.github.io/Katalon-IDEA-Combination/images/0_rootProject_opened_in_IDEA.png)
 
 The root project `KS_ObjectRepositoryGarbageCollector` consists of 2 sub-projects: `katalon` and `lib`. The settings.gradle file is as follows:
 ```
