@@ -56,7 +56,13 @@ $ tree Keywords | grep .groovy | wc
 
 These .groovy file comprises my library that help finding unused entries in the `Object Repository` folder.
 
-The library deserved a set of unit-tests for better quality. I developed a set of `*.groovy` files using JUnit4.
+The library deserved a set of unit-tests for better quality. However, as you already know, Katalon Studio does not support performing unit-test for "Custom Keywords" using JUnit.
+
+However, as a professinal programmer, I can not live without unit-testing. I introduced my "junit4ks" library to run the unit-tests for my custom Groovy classes inside Katalon Studio. See
+
+- [junit4ks](https://forum.katalon.com/t/running-junit4-in-katalon-studio/12270)
+
+I developed a set of `*.groovy` files using JUnit4.
 
 ```
 :~/tmp/KS_ObjectRepositoryGarbageCollector ((0.2.6))
@@ -97,15 +103,11 @@ $ tree Include/scripts | grep .groovy | wc
       21      58    1230
 ```
 
-I used my "junit4ks" library to run the unit-tests for my custom Groovy classes inside Katalon Studio. See
-
-- [junit4ks](https://forum.katalon.com/t/running-junit4-in-katalon-studio/12270)
-
 I ended up with over 40 .groovy classes. 
 
 **Did I enjoy that? --- No, I didn't. It was damn hard.** 
 
-Katalon Studio GUI has a lot of problems for developing & unit-testing custom Groovy classes in the `Keywords` folder. I'm not going to go into detail about what's wrong with Katalon Studio here. I admired to do the same job in my favorite IDE [IntelliJ IDEA](https://www.jetbrains.com/idea/). 
+Katalon Studio GUI has a lot of problems for developing & unit-testing custom Groovy classes in the `Keywords` folder. I'm not going to go into detail about what's wrong with Katalon Studio here. I definitely wanted to use [IntelliJ IDEA](https://www.jetbrains.com/idea/) for this job. 
 
 **But, how can I combine Katalon Studio and IntelliJ IDEA?**
 
@@ -347,7 +349,7 @@ I have overcome all the aforementioned technical difficulties. See the [docs](ht
 
 ## Conclusion
 
-I have developed a combination of tools to develop custom Groovy classes to enhance my Katalon projects. I enjoy stress-free programming using IntelliJ IDEA and Gradle build tool. I would prefer *Katalon - IntelliJ IDEA combination* to programming `Custom Keywords` without unit-tests in Katalon Studio.
+I have developed a combination of tools to develop custom Groovy classes to enhance my Katalon projects. I enjoy stress-free programming using IntelliJ IDEA and Gradle build tool. I would prefer *Katalon - IntelliJ IDEA combination* to programming `Custom Keywords` in Katalon Studio.
 
 ## Environment I used
 
