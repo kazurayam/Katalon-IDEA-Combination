@@ -2,7 +2,7 @@
 
 ## Forward
 
- This project assumes that you (the readers) have seasoned skill of Groovy programming with [JUnit5](https://junit.org/junit5/) and [Gradle](https://gradle.org/) build tool in [IntelliJ IDEA](https://www.jetbrains.com/idea/). If you are a non-programmer and/or new to Katalon Studio, this article would not be useful for you.
+ This article presents my know-how extending your capability to utilize Katalon Studio. I assume that you (the readers) have seasoned skill of Groovy programming with [JUnit5](https://junit.org/junit5/) and [Gradle](https://gradle.org/) build tool in [IntelliJ IDEA](https://www.jetbrains.com/idea/). If you are a non-programmer and/or new to Katalon Studio, this article would not be useful for you.
 
 ## Problem to solve
 
@@ -347,9 +347,7 @@ I have overcome all the aforementioned technical difficulties. See the [docs](ht
 
 ## Conclusion
 
-I have developed a way to develop Java/Groovy classes in IntelliJ IDEA using any unit-testing frameworks (JUnit4, JUnit Jupyter, TestNG, Spock) and utilize the library in a Katalon Studio project. Gradle build tool plays an essential role here. IntelliJ IDEA ensures me enjoyable programming experience. I feel contented with this combination of Katalon and IntelliJ IDEA. 
-
-So, I would no longer use the `Keywords` folder in a Katalon project to develop extension libraries.  
+I have developed a combination of tools to develop custom Groovy classes to enhance my Katalon projects. I enjoy stress-free programming using IntelliJ IDEA and Gradle build tool. I would prefer *Katalon - IntelliJ IDEA combination* to programming `Custom Keywords` in Katalon Studio.
 
 ## Environment I used
 
