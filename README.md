@@ -1,4 +1,4 @@
-# Developing Custom Classes for Katalon project using JUnit5 + Gradle + IntelliJ IDEA, or Katalon project as sub-project in Gradle multi-project
+# Developing Custom Classes for Katalon project using JUnit5 + Gradle + IntelliJ IDEA
 
 ## Forward
 
@@ -6,7 +6,9 @@
 
 ## Problem to solve
 
-One day, I worked on [Katalon Studio](https://katalon.com/katalon-studio). I wanted to find out unused Test Objects in the "Object Repository" folder in my katalon project. For that reason, I started developing a set of Groovy classes. See the project of its version 0.2.6 here:
+One day, I worked on a [Katalon Studio](https://katalon.com/katalon-studio) project. I wanted to find out unused Test Objects in the "Object Repository" folder in my katalon project. I knew Katalon Studio Enterprise equips the feature of [Test Object Refactoring](https://docs.katalon.com/katalon-studio/maintain-tests/refactor-test-objects-in-katalon-studio), but I don't have an Enterprise license. I only have a Free license.
+
+Therefore I started developing a set of Groovy classes that help me identifying unused TestObject. I initiated my project **KS_ObjectRepositoryGarbageCollector**. See the project of its version 0.2.6, which is already outdated, as follows:
 
 - https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/tree/0.2.6
 
@@ -52,7 +54,7 @@ $ tree Keywords | grep .groovy | wc
       21      60    1106
 ```
 
-These are my library that help finding unused entries in the `Object Repository` folder.
+These .groovy file comprises of my library that help finding unused entries in the `Object Repository` folder.
 
 The library deserved a set of unit-tests. I developed a set of `*.groovy` files using JUnit4.
 
@@ -99,9 +101,11 @@ I used my "junit4ks" library to run the unit-tests for my custom Groovy classes.
 
 - https://forum.katalon.com/t/running-junit4-in-katalon-studio/12270
 
-Did I enjoy that? --- No. It was damn hard. 
+I developed over 40 .groovy classes. Did I enjoy that? --- No. It was damn hard. 
 
-Katalon Studio has a lot of small but itchy problems for developing + unit-testing custom Groovy classes. I admired to do the same job (developing custom Groovy classes to extend my Katalon project) in [IntelliJ IDEA](https://www.jetbrains.com/idea/). But how can I do it in IntelliJ IDEA?
+Katalon Studio GUI has a lot of small but itchy problems for developing + unit-testing custom Groovy classes. I admired to do the same job in [IntelliJ IDEA](https://www.jetbrains.com/idea/). 
+
+But how can I do it in IntelliJ IDEA?
 
 ## Solution
 
@@ -151,7 +155,11 @@ $ tree -L 1 -F ./katalon
 
 Of course, I have no problem opening this project using Katalon Studio GUI, as follows:
 
-![1_katalon_subproject_opened_in_GUI](https://kazurayam.github.io/Developing_Custom_Classes_for_Katalon_project_using_Junit5-Gradle-IntelliJ_IDEA/images/1_katalon_subproject_opened_in_GUI.png)
+[1_katalon_subproject_opened_in_GUI](https://kazurayam.github.io/Developing_Custom_Classes_for_Katalon_project_using_JUnit5-Gradle-IntelliJ_IDEA/images/1_katalon_subproject_opened_in_GUI.png)
+
+This Katalon project is generated from the official sample WebUI project "[healthcare](https://docs.katalon.com/katalon-studio/get-started/sample-projects/webui/sample-webui-project-healthcare-sample-in-katalon-studio)". There is nothing unusual.
+
+
 
 
 
