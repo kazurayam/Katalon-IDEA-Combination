@@ -28,7 +28,8 @@ class ObjectRepositoryAccessorTest {
 
     @BeforeEach
     void setup() {
-        objectRepositoryDir = KatalonProjectDirectoryResolver.getProjectDir().resolve("Object Repository")
+        objectRepositoryDir =
+                KatalonProjectDirectoryResolver.getProjectDir().resolve("Object Repository")
         assert Files.exists(objectRepositoryDir)
     }
 

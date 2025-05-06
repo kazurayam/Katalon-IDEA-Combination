@@ -2,6 +2,15 @@
 
 - link:https://www.github.com/kazurayam/Katalon-IDEA-Combination/[repository]
 
+include::s1_target.adoc[]
+
+include::s2_how_to_resolve_dependencies.adoc[]
+
+include::s3_how_to_configure_ObjectRepository.adoc[]
+
+include::s4_how_to_transfer_artifact_jar.adoc[]
+
+
 == images
 - link:images/0_rootProject_opened_in_IDEA.png[]
 - link:images/1_katalon_subproject_opened_in_GUI.png[]

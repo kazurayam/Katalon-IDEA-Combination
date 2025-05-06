@@ -1,0 +1,12 @@
+tasks.register("generateDocs") {
+    group = 'Custom'
+    doFirst {
+        delete 'index.md'
+    }
+    doLast {
+        exec {
+            workingDir projectDir
+            commandLine './adoc2md.sh', '-t', './index_.adoc'
+        }
+    }
+}

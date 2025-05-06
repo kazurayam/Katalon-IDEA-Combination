@@ -349,7 +349,7 @@ I have overcome all the aforementioned technical difficulties. See the [docs](ht
 
 ## Conclusion
 
-I have developed a good combination of Katalon Studio + IntelliJ IDEA + Gradle. With this combination, I can enjoy stress-free Groovy programming. I would prefer this to programming `Custom Keywords` without unit-tests support in Katalon Studio.
+I have developed a good combination of Katalon Studio + IntelliJ IDEA + Gradle. With this combination, I can enjoy stress-free Groovy programming. I would prefer this tool set to programming `Custom Keywords` without unit-tests support in Katalon Studio.
 
 ## Environment I used
 

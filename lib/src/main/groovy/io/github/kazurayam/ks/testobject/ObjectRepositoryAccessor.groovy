@@ -26,6 +26,7 @@ class ObjectRepositoryAccessor {
         this.objectRepositoryDir = builder.objectRepositoryDir
         this.includeFilesSpecification = builder.includeFiles
         init()
+        logger.info("ObjectRepositoryAccessor was initialized with ${objectRepositoryDir}")
     }
 
     private void init() {

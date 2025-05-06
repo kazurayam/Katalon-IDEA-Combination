@@ -7,10 +7,30 @@ repositories {
 }
 
 ext {
-    MDSVersion = '0.1.1'
-    ORGCVersion = '0.4.13'
+    ARTIFACT_ID = 'my-custom-artifact'
+    ARTIFACT_VERSION = '0.1.1'
     userHome = System.getProperty('user.home')
     rootProjectDir = rootProject.projectDir as File
+    MDSVersion = '0.1.1'
+}
+
+
+tasks.register('importLibArtifact') {
+    group = 'Custom'
+    description = "import the KS_ObjectRepositoryGarbageCollector jar and the MockDirectoryScanner jar into the Drivers folder"
+    doFirst {
+        delete fileTree("Drivers").matching {
+            include "${ARTIFACT_ID}-*.jar"
+        }
+    }
+    doLast {
+        copy {
+            into layout.projectDirectory.dir("Drivers")
+            from("${rootProject.projectDir}/lib/build/libs") {
+                include "${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar"
+            }
+        }
+    }
 }
 
 tasks.register('importMDS') {
@@ -31,24 +51,6 @@ tasks.register('importMDS') {
     }
 }
 
-tasks.register('importLibArtifact') {
-    group = 'Custom'
-    description = "import the KS_ObjectRepositoryGarbageCollector jar and the MockDirectoryScanner jar into the Drivers folder"
-    doFirst {
-        delete fileTree("Drivers").matching {
-            include "ks-object-repository-garbage-collector-*.jar"
-        }
-    }
-    doLast {
-        copy {
-            into layout.projectDirectory.dir("Drivers")
-            from("${rootProject.projectDir}/lib/build/libs") {
-                include "ks-object-repository-garbage-collector-${ORGCVersion}.jar"
-            }
-        }
-    }
-}
-
 tasks.register('importDrivers') {
     group = 'Custom'
     description = 'run importLibArtifact and importMonDirectoryScanner'
@@ -62,26 +64,5 @@ tasks.register("cleanProject", Delete) {
         delete '.cache'
         delete 'bin'
         delete 'Libs'
-    }
-}
-
-tasks.register("publishDemoToDocs") {
-    group = 'Custom'
-    description = "copy the source of the Demo testcases and its outputs into the rootProject/docs folder"
-    doFirst {
-        delete "$rootProjectDir/docs/assets/testOutput"
-        delete "$rootProjectDir/docs/assets/Scripts"
-    }
-    doLast {
-        copy {
-            from("build/tmp/testOutput") {
-                include "demo/**"
-            }
-            into "$rootProjectDir/docs/assets/testOutput"
-        }
-        copy {
-            from("Scripts")
-            into "$rootProjectDir/docs/assets/Scripts"
-        }
     }
 }
