@@ -347,7 +347,7 @@ I have overcome all the aforementioned technical difficulties. See the [docs](ht
 
 ## Conclusion
 
-I have developed a combination of tools to develop custom Groovy classes to enhance my Katalon projects. I enjoy stress-free programming using IntelliJ IDEA and Gradle build tool. I would prefer *Katalon - IntelliJ IDEA combination* to programming `Custom Keywords` in Katalon Studio.
+I have developed a combination of tools to develop custom Groovy classes to enhance my Katalon projects. I enjoy stress-free programming using IntelliJ IDEA and Gradle build tool. I would prefer *Katalon - IntelliJ IDEA combination* to programming `Custom Keywords` without unit-tests in Katalon Studio.
 
 ## Environment I used
 
