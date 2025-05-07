@@ -1,5 +1,6 @@
 def runAdoc2md() {
     def processBuilder = new ProcessBuilder('./adoc2md.sh', '-t', './index_.adoc')
+    processBuilder.directory(projectDir as File)
     def output = File.createTempFile("runAdoc2md","")
     processBuilder.redirectOutput(output)
     def process = processBuilder.start()

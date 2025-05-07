@@ -264,6 +264,8 @@ lib
 
 I moved all of `.groovy` files in the Katalon project of the v0.2.6 into the `lib` subproject; and I further developed the library. I developed my library on IntelliJ IDEA using Gradle and JUnit4.
 
+IntelliJ IDEA supports a fully functional integration with Gradle project. See [the doc](https://www.jetbrains.com/help/idea/gradle.html).
+
 ## Technical difficulties to overcome
 
 I introduced Gradle Multi-project structure with 2 subprojects `lib` and `katalon`. Soon I realized that there are several technical difficulties that I needed to overcome.

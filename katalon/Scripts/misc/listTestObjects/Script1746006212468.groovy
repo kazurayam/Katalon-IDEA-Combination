@@ -19,7 +19,7 @@ ObjectRepositoryAccessor accessor =
 // get the list of TestObjectId contained in the "Object Repository"
 List<TestObjectId> list = accessor.getTestObjectIdList()
 
-// print the absolute path of the TestObjects in the "Object Repository"
+// print the absolute path of the rs files in the "Object Repository"
 list.each { TestObjectId toi ->
 	Path relativePath = toi.getRelativePath()
 	Path absolutePath = objectRepositoryDir.resolve(relativePath)
