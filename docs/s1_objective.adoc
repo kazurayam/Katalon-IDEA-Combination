@@ -1,15 +1,15 @@
-== What I want to achieve
+== Objective
 
-In the `katalon` project, I have written a test Case named `misc/listTestObjects`. Its source code is as follows:
+What I eventually want to achieve? Let me set the objective. In the link:{TreeURL}/katalon/[`katalon`] subproject, I wrote a test Case named `misc/listTestObjects`. Its source code is as follows:
 
 [source,groovy]
 ----
 include::../katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy[]
 ----
 
-Please note that this Test Case uses the class `io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor` and `io.github.kazurayam.ks.testobject.TestObjectId`. I will develop these classes in the `lib` subproject.
+Please note that this Test Case uses the class `io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor` and `io.github.kazurayam.ks.testobject.TestObjectId`. I will develop these classes in the link:{TreeURL}/lib/[`lib`] subproject.
 
-When I run this Test Case, it should print the absolute path of `*.rs` files as Test Object contained in the `Object Repository` folder in the `katlaon` subproject, like this:
+When I run this Test Case, it should print the absolute path Test Objects, which are `*.rs` files contained in the link:{TreeURL}/katalon/Object%20Repository/[`Object Repository`] folder in the `katalon` subproject, like this:
 
 ```
 2025-05-06 22:09:54.068 INFO  c.k.katalon.core.main.TestCaseExecutor   - --------------------
@@ -41,3 +41,5 @@ When I run this Test Case, it should print the absolute path of `*.rs` files as 
 2025-05-06 22:09:54.843 INFO  c.k.katalon.core.main.TestCaseExecutor   - END Test Cases/misc/listTestObjects
 
 ```
+
+As I started trying this Test Case, I encountered a series of technical issues. I could find resolutions. Let me present them to you one by one.

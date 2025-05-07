@@ -1,13 +1,15 @@
 - Table of contents
 {:toc}
 
-# Katalon-IDEA-Combination details
+# Know-how for Katalon - IntelliJ IDEA combination
 
--   [repository](https://www.github.com/kazurayam/Katalon-IDEA-Combination/)
+-   link to the [repository](https://www.github.com/kazurayam/Katalon-IDEA-Combination/)
 
-## What I want to achieve
+-   link to the [this doc](https://kazurayam.github.io/Katalon-IDEA-Combination/)
 
-In the `katalon` project, I have written a test Case named `misc/listTestObjects`. Its source code is as follows:
+## Objective
+
+What I eventually want to achieve? Let me set the objective. In the [`katalon`](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/katalon/) subproject, I wrote a test Case named `misc/listTestObjects`. Its source code is as follows:
 
     import java.nio.file.Files
     import java.nio.file.Path
@@ -30,16 +32,16 @@ In the `katalon` project, I have written a test Case named `misc/listTestObjects
     // get the list of TestObjectId contained in the "Object Repository"
     List<TestObjectId> list = accessor.getTestObjectIdList()
 
-    // print the absolute path of the TestObjects in the "Object Repository"
+    // print the absolute path of the rs files in the "Object Repository"
     list.each { TestObjectId toi ->
         Path relativePath = toi.getRelativePath()
         Path absolutePath = objectRepositoryDir.resolve(relativePath)
         println absolutePath
     }
 
-Please note that this Test Case uses the class `io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor` and `io.github.kazurayam.ks.testobject.TestObjectId`. I will develop these classes in the `lib` subproject.
+Please note that this Test Case uses the class `io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor` and `io.github.kazurayam.ks.testobject.TestObjectId`. I will develop these classes in the [`lib`](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/lib/) subproject.
 
-When I run this Test Case, it should print the absolute path of `*.rs` files as Test Object contained in the `Object Repository` folder in the `katlaon` subproject, like this:
+When I run this Test Case, it should print the absolute path Test Objects, which are `*.rs` files contained in the [`Object Repository`](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/katalon/Object%20Repository/) folder in the `katalon` subproject, like this:
 
     2025-05-06 22:09:54.068 INFO  c.k.katalon.core.main.TestCaseExecutor   - --------------------
     2025-05-06 22:09:54.073 INFO  c.k.katalon.core.main.TestCaseExecutor   - START Test Cases/misc/listTestObjects
@@ -68,6 +70,8 @@ When I run this Test Case, it should print the absolute path of `*.rs` files as 
     /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/txt_Password.rs
     /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/txt_UserName.rs
     2025-05-06 22:09:54.843 INFO  c.k.katalon.core.main.TestCaseExecutor   - END Test Cases/misc/listTestObjects
+
+As I started trying this Test Case, I encountered a series of technical issues. I could find resolutions. Let me present them to you one by one.
 
 ## How to resolve external dependencies
 
