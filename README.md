@@ -273,14 +273,14 @@ IntelliJ IDEA supports a fully functional integration with Gradle project. It' c
 I introduced Gradle Multi-project structure with 2 subprojects `lib` and `katalon`. Soon I realized that there are several technical difficulties that I needed to overcome.
 
 1. In order to compile and run Groovy codes in the `lib` subproject, Groovy compiler and test runners require many external dependencies (jar files) which are included in the Katalon Studio installation folder. How can it be done?
-2. In order to run tests in the `lib` subproject, I needed to be able to read the files in the `Object Repository` folder in the `katalon` subproject. It may sound easy to do, but actually difficult.
-3. Once I finished developing Groovy classes in the `lib` supbproject, I wanto import them into the sibling `katalon` project. How can I do it?
+2. In order to run tests in the `lib` subproject, I needed to be able to read the files in the `Object Repository` folder in the `katalon` subproject. It may sound easy, but it is actually difficult to do.
+3. Once I finished developing Groovy classes in the `lib` subproject, I wanted to import them into the sibling `katalon` project. How can I do it?
 
 I have overcome all these technical difficulties. I wrote seperated document. See the [docs](https://kazurayam.github.io/Katalon-IDEA-Combination/) for detail.
 
 ## Conclusion
 
-I have developed a good combination of Katalon Studio + IntelliJ IDEA + Gradle. With this combination, I can enjoy stress-free Groovy programming. I would prefer this tool set to programming `Custom Keywords` without unit-tests support in Katalon Studio.
+I have developed a good combination of Katalon Studio + IntelliJ IDEA + Gradle. With this combination, I can enjoy stress-free Groovy programming.
 
 ## Environment I used
 

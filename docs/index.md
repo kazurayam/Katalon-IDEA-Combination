@@ -990,6 +990,8 @@ In this project, I used JUnit Jupiter (JUnit5) for unit-testing in the `lib` sub
 
 In this project, I wrote every classes in Groovy. In the `lib` subproject, you can write codes in other JVM-programming languages: Java, Kotlin, Scala; as long as the IDE of your choice supports it.
 
+Katalon Studio v9.x once brought the "Keywords" to be an Enterprise feature. Katalon disallowed the users of Free version to create and use any custom Groovy class. It was a surprise for me. Later in v10.0 they turned the feature back. Now, I have got the experience of Katalon-IDEA-Combination, I would not be surprised even if the "Keywords" is priced again in future Katalon v11.x and later. It doesn’t matter to me.
+
 ## Conclusion
 
 I made a Gradle Multiproject with 2 subprojects: `katalon` and `lib`. I could develop a set of custom classes that extends my Katalon project’s capability in the `lib` subproject. I used IntelliJ IDEA with JUnit5 and Gradle. I could import the custom classes into the `katalon` subproject. Katalon studio could utilize the custom classes without any problem.

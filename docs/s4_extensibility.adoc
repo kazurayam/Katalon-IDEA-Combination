@@ -5,3 +5,5 @@ In this project, I employed IntelliJ IDEA as it is my favorite IDE. I believe th
 In this project, I used JUnit Jupiter (JUnit5) for unit-testing in the `lib` subproject. Of course, you can choose any unit-testing frameworks: JUnit4, TestNG, Spock. I suppose you can even choose Cucumber-Java, though I am not familiar with it.
 
 In this project, I wrote every classes in Groovy. In the `lib` subproject, you can write codes in other JVM-programming languages: Java, Kotlin, Scala; as long as the IDE of your choice supports it.
+
+Katalon Studio v9.x once brought the "Keywords" to be an Enterprise feature. Katalon disallowed the users of Free version to create and use any custom Groovy class. It was a surprise for me. Later in v10.0 they turned the feature back. Now, I have got the experience of Katalon-IDEA-Combination, I would not be surprised even if the "Keywords" is priced again in future Katalon v11.x and later. It doesn't matter to me.
