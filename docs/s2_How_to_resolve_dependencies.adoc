@@ -1,6 +1,6 @@
 == How to resolve external dependencies
 
-=== Issue1: The jar of Groovy is required
+=== Issue 1: The jar of Groovy is required
 
 In the `lib` subproject, I wrote a Groovy class
 
@@ -227,7 +227,7 @@ dependencyResolutionManagement {
 
 With this change, finally, the `:lib:compileGroovy` task succeeded.
 
-=== Issue 4: JUnit Jupiter, slf4j-simple
+=== Issue 4: JUnit Jupiter
 
 I ran the following command, which failed:
 
@@ -616,4 +616,46 @@ dependencies {
 
 This change resolved the error concerning "WebElement".
 
-===
+=== Issue 11: print Classpath
+
+I worked on constructing the classpath for the `lib` subproject. How does the content of classpath look like?
+
+I made a Gradle task `printClasspath` in the `lib` subproject.
+
+[source,text]
+----
+include::../lib/build.gradle[lines=93..99]
+----
+
+When I ran the `printClasspath` by
+
+[source,text]
+----
+$ ./gradlew :lib:printClasspath
+----
+
+I got the following output:
+
+[source,text]
+----
+include::./assets/classpath.txt[]
+----
+
+I could confirm that the classpath now includes `groovy-3.0.17.jar` and many others.
+
+=== Issue 12: Confirm Versions
+
+I made a custom Gradle task `printVersions` in the `lib/build.gradle`
+
+[source,text]
+----
+include::../lib/build.gradle[lines=81..91]
+----
+
+When I ran this, I got the following output:
+
+[source,text]
+----
+include::./assets/versions.txt[]
+----
+

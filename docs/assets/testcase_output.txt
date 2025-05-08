@@ -1,25 +1,13 @@
-== Objective
-
-What I eventually want to achieve? Let me set the objective. In the link:{TreeURL}/katalon/[`katalon`] subproject, I wrote a test Case named `misc/listTestObjects`. Its source code is as follows:
-
-[source,groovy]
-----
-include::../katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy[]
-----
-
-Please note that this Test Case uses the class `io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor` and `io.github.kazurayam.ks.testobject.TestObjectId`. I will develop these classes in the link:{TreeURL}/lib/[`lib`] subproject.
-
-When I run this Test Case, it should print the absolute path Test Objects, which are `*.rs` files contained in the link:{TreeURL}/katalon/Object%20Repository/[`Object Repository`] folder in the `katalon` subproject, like this:
-
-```
-2025-05-06 22:09:54.068 INFO  c.k.katalon.core.main.TestCaseExecutor   - --------------------
-2025-05-06 22:09:54.073 INFO  c.k.katalon.core.main.TestCaseExecutor   - START Test Cases/misc/listTestObjects
-2025-05-06 22:09:54.589 DEBUG testcase.listTestObjects                 - 1: projectDir = Paths.get(getProjectDir())
-2025-05-06 22:09:54.605 DEBUG testcase.listTestObjects                 - 2: objectRepositoryDir = projectDir.resolve("Object Repository")
-2025-05-06 22:09:54.631 DEBUG testcase.listTestObjects                 - 3: assert Files.exists(objectRepositoryDir)
-2025-05-06 22:09:54.662 DEBUG testcase.listTestObjects                 - 4: accessor = ObjectRepositoryAccessor$Builder(objectRepositoryDir).build()
-2025-05-06 22:09:54.745 DEBUG testcase.listTestObjects                 - 5: list = accessor.getTestObjectIdList()
-2025-05-06 22:09:54.780 DEBUG testcase.listTestObjects                 - 6: list.each({ io.github.kazurayam.ks.testobject.TestObjectId toi -> ... })
+2025-05-08 07:00:39.842 INFO  c.k.katalon.core.main.TestCaseExecutor   - --------------------
+2025-05-08 07:00:39.845 INFO  c.k.katalon.core.main.TestCaseExecutor   - START Test Cases/misc/listTestObjects
+2025-05-08 07:00:40.484 DEBUG testcase.listTestObjects                 - 1: projectDir = Paths.get(getProjectDir())
+2025-05-08 07:00:40.502 DEBUG testcase.listTestObjects                 - 2: println(projectDir=$projectDir)
+projectDir=/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon
+2025-05-08 07:00:40.574 DEBUG testcase.listTestObjects                 - 3: objectRepositoryDir = projectDir.resolve("Object Repository")
+2025-05-08 07:00:40.612 DEBUG testcase.listTestObjects                 - 4: assert Files.exists(objectRepositoryDir)
+2025-05-08 07:00:40.658 DEBUG testcase.listTestObjects                 - 5: accessor = ObjectRepositoryAccessor$Builder(objectRepositoryDir).build()
+2025-05-08 07:00:40.786 DEBUG testcase.listTestObjects                 - 6: list = accessor.getTestObjectIdList()
+2025-05-08 07:00:40.831 DEBUG testcase.listTestObjects                 - 7: list.each({ io.github.kazurayam.ks.testobject.TestObjectId toi -> ... })
 /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_AppointmentConfirmation/lbl_Comment.rs
 /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_AppointmentConfirmation/lbl_Facility.rs
 /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_AppointmentConfirmation/lbl_HospitalReadmission.rs
@@ -38,8 +26,4 @@ When I run this Test Case, it should print the absolute path Test Objects, which
 /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/btn_Login.rs
 /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/txt_Password.rs
 /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/txt_UserName.rs
-2025-05-06 22:09:54.843 INFO  c.k.katalon.core.main.TestCaseExecutor   - END Test Cases/misc/listTestObjects
-
-```
-
-As I started trying this Test Case, I encountered a series of technical issues. I could find resolutions. Let me present them to you one by one.
+2025-05-08 07:00:40.899 INFO  c.k.katalon.core.main.TestCaseExecutor   - END Test Cases/misc/listTestObjects

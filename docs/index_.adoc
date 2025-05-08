@@ -7,14 +7,13 @@
 - link to the link:{ReposURL}/[repository]
 - link to the link:{PagesURL}/[this doc]
 
-include::s1_objective.adoc[]
+include::s1_Objective.adoc[]
 
-include::s2_how_to_resolve_dependencies.adoc[]
+include::s2_How_to_resolve_dependencies.adoc[]
 
-include::s3_how_to_configure_ObjectRepository.adoc[]
+include::s3_RunConfiguration_getProjectDir_returns_null_outside_katalon_project.adoc[]
 
-include::s4_how_to_transfer_artifact_jar.adoc[]
-
+include::s4_How_to_transfer_artifact_jar.adoc[]
 
 == images
 - link:images/0_rootProject_opened_in_IDEA.png[]

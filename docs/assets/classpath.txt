@@ -1,0 +1,26 @@
+/Applications/Katalon Studio.app/Contents/Eclipse/configuration/resources/lib/groovy-3.0.17.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.google.gson_2.11.0.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core.appium_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core.cucumber_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core.mobile_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core.testng_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core.webservice_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core.webui_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core.windows_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.util_1.0.0.202504231120.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.apache.commons.lang3_3.14.0.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.apache.commons.lang_2.6.0.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.codehaus.groovy_3.0.22.v202406302347-e2406/lib/groovy-3.0.22-indy.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.codehaus.groovy_3.0.22.v202406302347-e2406/lib/groovy-test-3.0.22-indy.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.dom4j_2.1.4.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.eclipse.osgi.compatibility.state_1.2.1000.v20240213-1057.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.eclipse.osgi.services_3.12.100.v20240327-0645.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.eclipse.osgi.util_3.7.300.v20231104-1118.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.eclipse.osgi_3.20.0.v20240509-1421.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.seleniumhq.selenium.selenium-api_4.28.1.jar
+/Applications/Katalon Studio.app/Contents/Eclipse/plugins/slf4j.api_2.0.16.jar
+/Users/kazurayam/github/dotfiles/.gradle/caches/modules-2/files-2.1/com.kazurayam/monk-directory-scanner/0.1.1/51aae11fcb0e55b72e2bd5a97a6fd662af45915e/monk-directory-scanner-0.1.1.jar
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/build/classes/groovy/main
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/build/classes/java/main
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/build/resources/main

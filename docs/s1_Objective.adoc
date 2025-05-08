@@ -1,0 +1,19 @@
+== What I want to do
+
+What I eventually want to achieve? Let me set the objective. In the link:{TreeURL}/katalon/[`katalon`] subproject, I wrote a test Case named `misc/listTestObjects`. Its source code is as follows:
+
+[source,groovy]
+----
+include::../katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy[]
+----
+
+Please note that this Test Case uses the class `io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor` and `io.github.kazurayam.ks.testobject.TestObjectId`. I will develop these classes in the link:{TreeURL}/lib/[`lib`] subproject.
+
+When I run this Test Case, it should print the absolute path Test Objects, which are `*.rs` files contained in the link:{TreeURL}/katalon/Object%20Repository/[`Object Repository`] folder in the `katalon` subproject. The following messages is a sample output that I am contented with:
+
+[source,text]
+----
+include::./assets/testcase_output.txt[]
+```
+
+When I started trying to write this Test Case, I encountered a series of technical issues. I struggled for a few days. Eventually I could find resolutions. Let me present them to you one by one in the followng sections.

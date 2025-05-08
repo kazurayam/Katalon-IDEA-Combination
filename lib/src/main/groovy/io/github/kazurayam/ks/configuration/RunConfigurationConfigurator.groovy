@@ -16,7 +16,7 @@ class RunConfigurationConfigurator {
     static void configureProjectDir() {
         if (RunConfiguration.getProjectDir() == null ||
                 RunConfiguration.getProjectDir() == "null") {
-            // the code was invoked outside the Katalon Studio rumntime Environment,
+            // the code was invoked outside the Katalon Studio runtime Environment,
             // Perhaps, in the subproject `lib` next to the `katalon` project.
             // We want to configure the RunConfiguration instance to return the directory of
             // the `katalon` project

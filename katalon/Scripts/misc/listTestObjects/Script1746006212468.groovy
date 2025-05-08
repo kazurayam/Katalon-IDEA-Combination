@@ -7,8 +7,11 @@ import com.kms.katalon.core.configuration.RunConfiguration
 import io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor
 import io.github.kazurayam.ks.testobject.TestObjectId
 
-// find the path of "Object Repository" folder
+// find the path of "katalon" project folder 
 Path projectDir = Paths.get(RunConfiguration.getProjectDir())
+println "projectDir=${projectDir}"
+
+// find the path of "Object Repository" folder
 Path objectRepositoryDir = projectDir.resolve("Object Repository")
 assert Files.exists(objectRepositoryDir)
 
