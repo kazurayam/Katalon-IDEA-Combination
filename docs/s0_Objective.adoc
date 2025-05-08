@@ -14,6 +14,6 @@ When I run this Test Case, it should print the absolute path Test Objects, which
 [source,text]
 ----
 include::./assets/testcase_output.txt[]
-```
+----
 
-When I started trying to write this Test Case, I encountered a series of technical issues. I struggled for a few days. Eventually I could find resolutions. Let me present them to you one by one in the followng sections.
+When I started trying to write this Test Case, I encountered a series of technical issues. I struggled for a few days. Eventually I could find resolutions. Let me present them to you one by one in the following sections.

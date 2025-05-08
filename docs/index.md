@@ -1,7 +1,7 @@
 - Table of contents
 {:toc}
 
-# Know-how for Katalon - IntelliJ IDEA combination
+# Katalon - IntelliJ IDEA Combination Knowhow
 
 -   link to the [repository](https://www.github.com/kazurayam/Katalon-IDEA-Combination/)
 
@@ -75,121 +75,105 @@ When I run this Test Case, it should print the absolute path Test Objects, which
     /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/txt_Password.rs
     /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/txt_UserName.rs
     2025-05-08 07:00:40.899 INFO  c.k.katalon.core.main.TestCaseExecutor   - END Test Cases/misc/listTestObjects
-    ```
 
-    When I started trying to write this Test Case, I encountered a series of technical issues. I struggled for a few days. Eventually I could find resolutions. Let me present them to you one by one in the followng sections.
+When I started trying to write this Test Case, I encountered a series of technical issues. I struggled for a few days. Eventually I could find resolutions. Let me present them to you one by one in the following sections.
 
-    == How to resolve external dependencies
+## Problem1: How to resolve external dependencies
 
-    === Issue 1: The jar of Groovy is required
+### Problem1-1 The jar of Groovy is required
 
-    In the `lib` subproject, I wrote a Groovy class
+In the `lib` subproject, I wrote a Groovy class
 
-    - link:{TreeURL}/src/main/io/github/kazurayam/testobject/ObjectRepositoryAccessor.groovy[]
+-   <https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/src/main/io/github/kazurayam/testobject/ObjectRepositoryAccessor.groovy>
 
-    I tried to compile it in the commandline, and got an error.
+I tried to compile it in the commandline, and got an error.
 
-    [source,text]
+    $ ./gradlew :lib:compileGroovy
+    > Task :lib:compileGroovy FAILED
 
-$ ./gradlew :lib:compileGroovy
-&gt; Task :lib:compileGroovy FAILED
+    FAILURE: Build failed with an exception.
 
-FAILURE: Build failed with an exception.
-
--   What went wrong:
+    * What went wrong:
     Execution failed for task ':lib:compileGroovy'.
-    &gt; Cannot infer Groovy class path because no Groovy Jar was found on class path: \[/Users/kazurayam/tmp/Katalon-IDEA-Combination/lib/build/classes/java/main\]
+    > Cannot infer Groovy class path because no Groovy Jar was found on class path: [/Users/kazurayam/tmp/Katalon-IDEA-Combination/lib/build/classes/java/main]
 
-<!-- -->
+The `lib:compileGroovy` task required the Groovy jar of some version, but I did not configured it. That’s the cause of the error.
 
-    The `lib:compileGroovy` task required the Groovy jar of some version, but I did not configured it. That's the cause of the error.
+Where is the Groovy’s jar file?
 
-    Where is the Groovy's jar file?
+Every Katalon project has a file named `.classpath`. Katalon Studio list the jar files it bundles and are required to run a Test Case. See the `katlaon/.classpath`
 
-    Every Katalon project has a file named `.classpath`. Katalon Studio list the jar files it bundles and are required to run a Test Case. See the `katlaon/.classpath`
+-   [katalon/.classpath](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/katalon/.classpath)
 
-    - link:{TreeURL}/katalon/.classpath[katalon/.classpath]
+In the `.classpath` file, I found the following line:
 
-    In the `.classpath` file, I found the following line:
+     <classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/configuration/resources/lib/groovy-3.0.17.jar"/>
 
-    ```
-        <classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/configuration/resources/lib/groovy-3.0.17.jar"/>
-    ```
+This is the Groovy jar file bundled in the Katalon Studio distribution. So, I should use it for the `lib` subproject as well.
 
-    This is the Groovy jar file bundled in the Katalon Studio distribution. So, I should use it for the `lib` subproject as well.
+I edited the `lib/build.gradle` file to use the Groovy jar which is located in the Katalon Studio installation directory.
 
-    I edited the `lib/build.gradle` file to use the Groovy jar which is located in the Katalon Studio installation directory.
+    plugins {
+        id 'groovy'
+    }
+    ...
+    static String resolveKatalonStudioInstallationDirectory() {
+        OperatingSystem os = OperatingSystem.current()
+        if (os.isMacOsX()) {
+            return '/Applications/Katalon Studio.app/Contents/Eclipse'
+        } else if (os.isWindows()) {
+            String userHome = System.getProperty("user.home")
+            return "${userHome}/Katalon_Studio_Windows_64-10.2.0"
+        } else if (os.isLinux()) {
+            throw new UnsupportedOperationException("I don't know")
+        } else {
+            // Unknown OS
+            throw new UnsupportedOperationException("Who knows?")
+        }
+    }
 
-    [source,text]
+    ext {
+        KATALON_STUDIO_INSTALLATION_DIRECTORY = resolveKatalonStudioInstallationDirectory()
+        GroovyVersion = '3.0.17'
+    }
 
-plugins {
-id 'groovy'
-}
-…​
-static String resolveKatalonStudioInstallationDirectory() {
-OperatingSystem os = OperatingSystem.current()
-if (os.isMacOsX()) {
-return '/Applications/Katalon Studio.app/Contents/Eclipse'
-} else if (os.isWindows()) {
-String userHome = System.getProperty("user.home")
-return "${userHome}/Katalon\_Studio\_Windows\_64-10.2.0"
-} else if (os.isLinux()) {
-throw new UnsupportedOperationException("I don’t know")
-} else {
-// Unknown OS
-throw new UnsupportedOperationException("Who knows?")
-}
-}
+    dependencies {
 
-ext {
-KATALON\_STUDIO\_INSTALLATION\_DIRECTORY = resolveKatalonStudioInstallationDirectory()
-GroovyVersion = '3.0.17'
-}
+        // will look into the Katalon Studio installation directory
 
-dependencies {
+        implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/configuration/resources/lib",
+                include: [
+                        "groovy-${GroovyVersion}.jar"
+                ]
+        )
 
-    // will look into the Katalon Studio installation directory
+With this change, the error "Cannot infer Groovy class path" was resolved.
 
-    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/configuration/resources/lib",
-            include: [
-                    "groovy-${GroovyVersion}.jar"
-            ]
-    )
+### Problem1-2 The jar of "com.kms.katalon.core" is required
 
-    With this change, the error "Cannot infer Groovy class path" was resolved.
+`./gradlew :lib:compileGroovy` command continued to fail with error.
 
+    $ gradle :lib:compileGroovy
 
+    > Task :lib:compileGroovy
+    startup failed:
+    /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 5: unable to resolve class com.kms.katalon.core.testobject.TestObject
+     @ line 5, column 1.
+       import com.kms.katalon.core.testobject.TestObject
+       ^
 
-    === Issue 2: The jar of "com.kms.katalon.core" is required
+The message said that the `:lib:compileGroovy` task was unable to find the `com.kms.katalon.core.testobject.TestObject` class. I had to include the Katalon’s Core jar in the classpath.
 
-    `./gradlew :lib:compileGroovy` command continued to fail with error.
+In the `katalon/.classpath` file, I found the following line:
 
-    [source,text]
+    <classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core_1.0.0.202504231120.jar" sourcepath="/Applications/Katalon Studio.app/Contents/Eclipse/configuration/resources/source/com.kms.katalon.core/com.kms.katalon.core-sources.jar">
+            <attributes>
+                <attribute name="javadoc_location" value="file:/Applications/Katalon%20Studio.app/Contents/Eclipse/configuration/resources/apidocs/com.kms.katalon.core/"/>
+            </attributes>
+        </classpathentry>
 
-$ gradle :lib:compileGroovy
+OK. I will include this jar in the classpath for `:lib:compileGroovy` target. I edited the `lib/build.gradle` file.
 
-> Task :lib:compileGroovy
-> startup failed:
-> /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 5: unable to resolve class com.kms.katalon.core.testobject.TestObject
-> @ line 5, column 1.
-> import com.kms.katalon.core.testobject.TestObject
-> ^
-
-    The message said that the `:lib:compileGroovy` task was unable to find the `com.kms.katalon.core.testobject.TestObject` class. I had to include the Katalon's Core jar in the classpath.
-
-    In the `katalon/.classpath` file, I found the following line:
-
-    [source,text]
-
-&lt;classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core\_1.0.0.202504231120.jar" sourcepath="/Applications/Katalon Studio.app/Contents/Eclipse/configuration/resources/source/com.kms.katalon.core/com.kms.katalon.core-sources.jar"&gt;
-&lt;attributes&gt;
-&lt;attribute name="javadoc\_location" value="file:/Applications/Katalon%20Studio.app/Contents/Eclipse/configuration/resources/apidocs/com.kms.katalon.core/"/&gt;
-&lt;/attributes&gt;
-&lt;/classpathentry&gt;
-
-    OK. I will include this jar in the classpath for `:lib:compileGroovy` target. I edited the `lib/build.gradle` file.
-
-    ```
     dependencies {
         ...
         implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
@@ -197,235 +181,214 @@ $ gradle :lib:compileGroovy
                         'com.kms.katalon.core*.jar',
                         'com.kms.katalon.util*.jar'
                 ])
-    ```
 
-    With this change, the errors concerning `com.kms.katalon.core` module were resolved.
+With this change, the errors concerning `com.kms.katalon.core` module were resolved.
 
-    === Issue 3: The jar of external jar which is bundled in the Katalon Studio distribution
+### Problem1-3 The jar of external jar which is bundled in the Katalon Studio distribution
 
-    The `:lib:compileGroovy` task continued to fail.
+The `:lib:compileGroovy` task continued to fail.
 
-    [source,text]
+    ~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+    gradle :lib:compileGroovy
 
-~/katalon-workspace/Katalon-IDEA-Combination git:\[develop\]
-gradle :lib:compileGroovy
+    > Task :lib:compileGroovy FAILED
+    startup failed:
+    /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 3: unable to resolve class com.kazurayam.ant.DirectoryScanner
+     @ line 3, column 1.
+       import com.kazurayam.ant.DirectoryScanner
+       ^
 
-> Task :lib:compileGroovy FAILED
-> startup failed:
-> /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 3: unable to resolve class com.kazurayam.ant.DirectoryScanner
-> @ line 3, column 1.
-> import com.kazurayam.ant.DirectoryScanner
-> ^
+    /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 6: unable to resolve class org.slf4j.Logger
+     @ line 6, column 1.
+       import org.slf4j.Logger
+       ^
 
-/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 6: unable to resolve class org.slf4j.Logger
-@ line 6, column 1.
-import org.slf4j.Logger
-^
+    /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 7: unable to resolve class org.slf4j.LoggerFactory
+     @ line 7, column 1.
+       import org.slf4j.LoggerFactory
+       ^
 
-/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 7: unable to resolve class org.slf4j.LoggerFactory
-@ line 7, column 1.
-import org.slf4j.LoggerFactory
-^
+`org.slf4j.LoggerFactory` and `org.slf4j.Logger` --- these classes are member of the famous `SLF4J API` library, which is published at the Maven Central Repository:
 
-    `org.slf4j.LoggerFactory` and `org.slf4j.Logger` --- these classes are member of the famous `SLF4J API` library, which is published at the Maven Central Repository:
+-   <https://mvnrepository.com/artifact/org.slf4j/slf4j-api>
 
-    - https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+Is it OK if I download the SLF4J-API jar of arbitrary version from Maven Central? --- No, I shouldn’t. Katalon Studio bundles the SLF4J-API of a specific version. See the `katalon/.classpath` file:
 
-    Is it OK if I download the SLF4J-API jar of arbitrary version from Maven Central? --- No, I shouldn't. Katalon Studio bundles the SLF4J-API of a specific version. See the `katalon/.classpath` file:
+     <classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/plugins/slf4j.api_2.0.16.jar"/>
 
-    [source, text]
+My `:lib:compileGroovy` task should use the specific version of external jars bundled in the Katalon Studio distribution if present.
 
-    <classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/plugins/slf4j.api_2.0.16.jar"/>
+I edited the `lib/build.gradle` file:
 
-    My `:lib:compileGroovy` task should use the specific version of external jars bundled in the Katalon Studio distribution if present.
+    dependencies {
+        ...
+        implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
+                include: [
+                        ...
+                        'slf4j*.jar'
+                ])
+    }
 
-    I edited the `lib/build.gradle` file:
+With this change, the error concerning SLF4J-API disappeared.
 
-    [source,text]
+### Problem1-4 The external jar which is missing from the Katalon’s distribution
 
-dependencies {
-…​
-implementation fileTree(dir: "${KATALON\_STUDIO\_INSTALLATION\_DIRECTORY}/plugins",
-include: \[
-…​
-'slf4j\*.jar'
-\])
-}
+The `:lib:compileGroovy` task failed yet.
 
-    With this change, the error concerning SLF4J-API disapperared.
+    gradle :lib:compileGroovy
 
-    === Issue 4: the external jar missing from the Katalon's distribution
+    > Task :lib:compileGroovy
+    startup failed:
+    /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 3: unable to resolve class com.kazurayam.ant.DirectoryScanner
+     @ line 3, column 1.
+       import com.kazurayam.ant.DirectoryScanner
+       ^
 
-    The `:lib:compileGroovy` task failed yet.
+The `com.kazurayam.ant.DirectoryScanner` is available at the Maven Central repository
 
-    [source,text]
+-   <https://mvnrepository.com/artifact/com.kazurayam/monk-directory-scanner>
 
-gradle :lib:compileGroovy
+This jar is not bundled in the Katalon Studio’s distributable.
 
-> Task :lib:compileGroovy
-> startup failed:
-> /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 3: unable to resolve class com.kazurayam.ant.DirectoryScanner
-> @ line 3, column 1.
-> import com.kazurayam.ant.DirectoryScanner
-> ^
+This type of external jar is easiest to include in the classpath for the `:lib:compileGroovy` task. I edited the `lib/build.gradle` file:
 
-    The `com.kazurayam.ant.DirectoryScanner` is available at the Maven Central repository
+    repositories {
+        mavenCentral()
+    }
 
-    - https://mvnrepository.com/artifact/com.kazurayam/monk-directory-scanner
+    dependencies {
+        ...
+        implementation libs.directoryscanner
 
-    This jar is not bundled in the Katalon Studio's distributable.
+And I edited the `settings.gradle` file in the rootProject directory:
 
-    This type of external jar is easiest to include in the classpath for the `:lib:compileGroovy` task. I edited the `lib/build.gradle` file:
+    dependencyResolutionManagement {
+        versionCatalogs {
+            libs {
+                library('directoryscanner', 'com.kazurayam:monk-directory-scanner:0.1.1')
+                ...
 
-    [source,text]
+With this change, finally, the `:lib:compileGroovy` task succeeded.
 
-repositories {
-mavenCentral()
-}
+### Problem1-5 JUnit Jupiter
 
-dependencies {
-…​
-implementation libs.directoryscanner
+I ran the following command, which failed:
 
-    And I edited the `settings.gradle` file in the rootProject directory:
+    $ ./gradlew :lib:test
+    Starting a Gradle Daemon (subsequent builds will be faster)
 
-    [source,text]
+    > Task :lib:compileTestGroovy FAILED
+    startup failed:
+    /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/test/groovy/com/kms/katalon/core/testobject/ObjectRepositoryFailingTest.groovy: 3: unable to resolve class org.junit.jupiter.api.Test
+     @ line 3, column 1.
+       import org.junit.jupiter.api.Test
+       ^
+       ...
 
-dependencyResolutionManagement {
-versionCatalogs {
-libs {
-library('directoryscanner', 'com.kazurayam:monk-directory-scanner:0.1.1')
-…​
+The `org.junit.jupiter.api.Test` class belongs to the JUnit5 jar, which is not bundled in the Katalon Studio’s distributable. I need to add the jar in the classpath for the `:lib:test` target.
 
-    With this change, finally, the `:lib:compileGroovy` task succeeded.
+I edited the `lib/build.gradle` file:
 
-    === Issue 4: JUnit Jupiter
+    dependencies {
+        ...
+        testImplementation libs.junit.jupiter.api
+        testImplementation libs.junit.jupiter.engine
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+        ...
+    }
 
-    I ran the following command, which failed:
+Also I edited the `settings.gradle` file:
 
-    [source,text]
+    dependencyResolutionManagement {
+        versionCatalogs {
+            libs {
+                ...
+                library('junit-jupiter-api', 'org.junit.jupiter:junit-jupiter-api:5.12.2')
+                library('junit-jupiter-engine', 'org.junit.jupiter:junit-jupiter-engine:5.12.2')
+                ...
 
-$ ./gradlew :lib:test
-Starting a Gradle Daemon (subsequent builds will be faster)
+With this change, the errors concerning "org.junit.jupiter.api" were resolved.
 
-> Task :lib:compileTestGroovy FAILED
-> startup failed:
-> /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/test/groovy/com/kms/katalon/core/testobject/ObjectRepositoryFailingTest.groovy: 3: unable to resolve class org.junit.jupiter.api.Test
-> @ line 3, column 1.
-> import org.junit.jupiter.api.Test
-> ^
-> …​
+### Problem1-6 groovy.lang.GroovyObject
 
-    The `org.junit.jupiter.api.Test` class belongs to the JUnit5 jar, which is not bundled in the Katalon Studio's distributable. I need to add the jar in the classpath for the `:lib:test` target.
+I continued trying `gradle :lib:test`, but failed
 
-    I edited the `lib/build.gradle` file:
+    ~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+    ./gradlew :lib:test
+    > Task :lib:compileTestGroovy FAILED
 
-    [source,text]
+    FAILURE: Build failed with an exception.
 
-dependencies {
-…​
-testImplementation libs.junit.jupiter.api
-testImplementation libs.junit.jupiter.engine
-testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-…​
-}
-
-    Also I edited the `settings.gradle` file:
-
-    [source,text]
-
-dependencyResolutionManagement {
-versionCatalogs {
-libs {
-…​
-library('junit-jupiter-api', 'org.junit.jupiter:junit-jupiter-api:5.12.2')
-library('junit-jupiter-engine', 'org.junit.jupiter:junit-jupiter-engine:5.12.2')
-…​
-
-    With this change, the errors concerning "org.junit.jupiter.api" were resolved.
-
-    === Issue 5: "java.lang.NoClassDefFoundError: groovy.lang.GroovyObject"
-
-    I continued trying `gradle :lib:test`, but failed
-
-    [source,text]
-
-~/katalon-workspace/Katalon-IDEA-Combination git:\[develop\]
-./gradlew :lib:test
-&gt; Task :lib:compileTestGroovy FAILED
-
-FAILURE: Build failed with an exception.
-
--   What went wrong:
+    * What went wrong:
     Execution failed for task ':lib:compileTestGroovy'.
-    &gt; Unrecoverable compilation error: startup failed:
-    General error during conversion: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
+    > Unrecoverable compilation error: startup failed:
+      General error during conversion: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
 
-        java.lang.RuntimeException: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
-              at org.codehaus.groovy.control.CompilationUnit$IPrimaryClassNodeOperation.doPhaseOperation(CompilationUnit.java:977)
-              at org.codehaus.groovy.control.CompilationUnit.processPhaseOperations(CompilationUnit.java:672)
-              at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:636)
-              at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:611)
-              at org.gradle.api.internal.tasks.compile.ApiGroovyCompiler.execute(ApiGroovyCompiler.java:285)
-              at org.gradle.api.internal.tasks.compile.ApiGroovyCompiler.execute(ApiGroovyCompiler.java:67)
-              at org.gradle.api.internal.tasks.compile.GroovyCompilerFactory$DaemonSideCompiler.execute(GroovyCompilerFactory.java:90)
-              at org.gradle.api.internal.tasks.compile.GroovyCompilerFactory$DaemonSideCompiler.execute(GroovyCompilerFactory.java:76)
-              at org.gradle.api.internal.tasks.compile.daemon.AbstractIsolatedCompilerWorkerExecutor$CompilerWorkAction.execute(AbstractIsolatedCompilerWorkerExecutor.java:78)
-              at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
-              at org.gradle.workers.internal.AbstractClassLoaderWorker$1.create(AbstractClassLoaderWorker.java:54)
-              at org.gradle.workers.internal.AbstractClassLoaderWorker$1.create(AbstractClassLoaderWorker.java:48)
-              at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
-              at org.gradle.workers.internal.AbstractClassLoaderWorker.executeInClassLoader(AbstractClassLoaderWorker.java:48)
-              at org.gradle.workers.internal.IsolatedClassloaderWorker.run(IsolatedClassloaderWorker.java:49)
-              at org.gradle.workers.internal.IsolatedClassloaderWorker.run(IsolatedClassloaderWorker.java:30)
-              at org.gradle.workers.internal.WorkerDaemonServer.run(WorkerDaemonServer.java:96)
-              at org.gradle.workers.internal.WorkerDaemonServer.run(WorkerDaemonServer.java:65)
-              at org.gradle.process.internal.worker.request.WorkerAction$1.call(WorkerAction.java:138)
-              at org.gradle.process.internal.worker.child.WorkerLogEventListener.withWorkerLoggingProtocol(WorkerLogEventListener.java:41)
-              at org.gradle.process.internal.worker.request.WorkerAction.lambda$run$0(WorkerAction.java:135)
-              at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:80)
-              at org.gradle.process.internal.worker.request.WorkerAction.run(WorkerAction.java:127)
-              at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-              at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-              at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-              at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-              at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
-              at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
-              at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:182)
-              at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:164)
-              at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:414)
-              at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
-              at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
-              at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-              at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-              at java.base/java.lang.Thread.run(Thread.java:840)
-        Caused by: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
-              at org.codehaus.groovy.ast.decompiled.AsmReferenceResolver.resolveClass(AsmReferenceResolver.java:46)
-              at org.codehaus.groovy.ast.decompiled.ClassSignatureParser.configureClass(ClassSignatureParser.java:42)
-              at org.codehaus.groovy.ast.decompiled.DecompiledClassNode.lazyInitSupers(DecompiledClassNode.java:189)
-              at org.codehaus.groovy.ast.decompiled.DecompiledClassNode.getGenericsTypes(DecompiledClassNode.java:80)
-              at org.codehaus.groovy.control.GenericsVisitor.checkGenericsUsage(GenericsVisitor.java:157)
-              at org.codehaus.groovy.control.GenericsVisitor.checkGenericsUsage(GenericsVisitor.java:151)
-              at org.codehaus.groovy.control.GenericsVisitor.visitDeclarationExpression(GenericsVisitor.java:113)
-              at org.codehaus.groovy.ast.expr.DeclarationExpression.visit(DeclarationExpression.java:89)
-              at org.codehaus.groovy.ast.CodeVisitorSupport.visitExpressionStatement(CodeVisitorSupport.java:117)
-              at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitExpressionStatement(ClassCodeVisitorSupport.java:200)
-              at org.codehaus.groovy.ast.stmt.ExpressionStatement.visit(ExpressionStatement.java:40)
-              at org.codehaus.groovy.ast.CodeVisitorSupport.visitBlockStatement(CodeVisitorSupport.java:86)
-              at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitBlockStatement(ClassCodeVisitorSupport.java:164)
-              at org.codehaus.groovy.ast.stmt.BlockStatement.visit(BlockStatement.java:69)
-              at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitClassCodeContainer(ClassCodeVisitorSupport.java:138)
-              at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitConstructorOrMethod(ClassCodeVisitorSupport.java:111)
-              at org.codehaus.groovy.control.GenericsVisitor.visitConstructorOrMethod(GenericsVisitor.java:93)
-              at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitMethod(ClassCodeVisitorSupport.java:106)
-              at org.codehaus.groovy.ast.ClassNode.visitMethods(ClassNode.java:1094)
-              at org.codehaus.groovy.ast.ClassNode.visitContents(ClassNode.java:1087)
-              at org.codehaus.groovy.control.GenericsVisitor.visitClass(GenericsVisitor.java:74)
-              at org.codehaus.groovy.control.CompilationUnit.lambda$addPhaseOperations$5(CompilationUnit.java:221)
-              at org.codehaus.groovy.control.CompilationUnit$IPrimaryClassNodeOperation.doPhaseOperation(CompilationUnit.java:943)
-              ... 36 more
+      java.lang.RuntimeException: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
+            at org.codehaus.groovy.control.CompilationUnit$IPrimaryClassNodeOperation.doPhaseOperation(CompilationUnit.java:977)
+            at org.codehaus.groovy.control.CompilationUnit.processPhaseOperations(CompilationUnit.java:672)
+            at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:636)
+            at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:611)
+            at org.gradle.api.internal.tasks.compile.ApiGroovyCompiler.execute(ApiGroovyCompiler.java:285)
+            at org.gradle.api.internal.tasks.compile.ApiGroovyCompiler.execute(ApiGroovyCompiler.java:67)
+            at org.gradle.api.internal.tasks.compile.GroovyCompilerFactory$DaemonSideCompiler.execute(GroovyCompilerFactory.java:90)
+            at org.gradle.api.internal.tasks.compile.GroovyCompilerFactory$DaemonSideCompiler.execute(GroovyCompilerFactory.java:76)
+            at org.gradle.api.internal.tasks.compile.daemon.AbstractIsolatedCompilerWorkerExecutor$CompilerWorkAction.execute(AbstractIsolatedCompilerWorkerExecutor.java:78)
+            at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+            at org.gradle.workers.internal.AbstractClassLoaderWorker$1.create(AbstractClassLoaderWorker.java:54)
+            at org.gradle.workers.internal.AbstractClassLoaderWorker$1.create(AbstractClassLoaderWorker.java:48)
+            at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+            at org.gradle.workers.internal.AbstractClassLoaderWorker.executeInClassLoader(AbstractClassLoaderWorker.java:48)
+            at org.gradle.workers.internal.IsolatedClassloaderWorker.run(IsolatedClassloaderWorker.java:49)
+            at org.gradle.workers.internal.IsolatedClassloaderWorker.run(IsolatedClassloaderWorker.java:30)
+            at org.gradle.workers.internal.WorkerDaemonServer.run(WorkerDaemonServer.java:96)
+            at org.gradle.workers.internal.WorkerDaemonServer.run(WorkerDaemonServer.java:65)
+            at org.gradle.process.internal.worker.request.WorkerAction$1.call(WorkerAction.java:138)
+            at org.gradle.process.internal.worker.child.WorkerLogEventListener.withWorkerLoggingProtocol(WorkerLogEventListener.java:41)
+            at org.gradle.process.internal.worker.request.WorkerAction.lambda$run$0(WorkerAction.java:135)
+            at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:80)
+            at org.gradle.process.internal.worker.request.WorkerAction.run(WorkerAction.java:127)
+            at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+            at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+            at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+            at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+            at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+            at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+            at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:182)
+            at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:164)
+            at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:414)
+            at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+            at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
+            at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+            at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+            at java.base/java.lang.Thread.run(Thread.java:840)
+      Caused by: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
+            at org.codehaus.groovy.ast.decompiled.AsmReferenceResolver.resolveClass(AsmReferenceResolver.java:46)
+            at org.codehaus.groovy.ast.decompiled.ClassSignatureParser.configureClass(ClassSignatureParser.java:42)
+            at org.codehaus.groovy.ast.decompiled.DecompiledClassNode.lazyInitSupers(DecompiledClassNode.java:189)
+            at org.codehaus.groovy.ast.decompiled.DecompiledClassNode.getGenericsTypes(DecompiledClassNode.java:80)
+            at org.codehaus.groovy.control.GenericsVisitor.checkGenericsUsage(GenericsVisitor.java:157)
+            at org.codehaus.groovy.control.GenericsVisitor.checkGenericsUsage(GenericsVisitor.java:151)
+            at org.codehaus.groovy.control.GenericsVisitor.visitDeclarationExpression(GenericsVisitor.java:113)
+            at org.codehaus.groovy.ast.expr.DeclarationExpression.visit(DeclarationExpression.java:89)
+            at org.codehaus.groovy.ast.CodeVisitorSupport.visitExpressionStatement(CodeVisitorSupport.java:117)
+            at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitExpressionStatement(ClassCodeVisitorSupport.java:200)
+            at org.codehaus.groovy.ast.stmt.ExpressionStatement.visit(ExpressionStatement.java:40)
+            at org.codehaus.groovy.ast.CodeVisitorSupport.visitBlockStatement(CodeVisitorSupport.java:86)
+            at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitBlockStatement(ClassCodeVisitorSupport.java:164)
+            at org.codehaus.groovy.ast.stmt.BlockStatement.visit(BlockStatement.java:69)
+            at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitClassCodeContainer(ClassCodeVisitorSupport.java:138)
+            at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitConstructorOrMethod(ClassCodeVisitorSupport.java:111)
+            at org.codehaus.groovy.control.GenericsVisitor.visitConstructorOrMethod(GenericsVisitor.java:93)
+            at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitMethod(ClassCodeVisitorSupport.java:106)
+            at org.codehaus.groovy.ast.ClassNode.visitMethods(ClassNode.java:1094)
+            at org.codehaus.groovy.ast.ClassNode.visitContents(ClassNode.java:1087)
+            at org.codehaus.groovy.control.GenericsVisitor.visitClass(GenericsVisitor.java:74)
+            at org.codehaus.groovy.control.CompilationUnit.lambda$addPhaseOperations$5(CompilationUnit.java:221)
+            at org.codehaus.groovy.control.CompilationUnit$IPrimaryClassNodeOperation.doPhaseOperation(CompilationUnit.java:943)
+            ... 36 more
 
-        1 error
+      1 error
 
 I have never seen such an error "NoClassDefFound: groovy.lang.GroovyObject". I made a lot of search, eventually found a workaround.
 
@@ -441,7 +404,7 @@ I edited the `lib/build.gradle` file.
 
 With this change, the error concerning `groovy.lang.GroovyObject` was resolved.
 
-### Issue 6: NoClassDefFoundError: org/dom4j/DocumentException
+### Problem1-7 org/dom4j/DocumentException
 
 The `./gradlew :lib:test` command still failed.
 
@@ -478,7 +441,7 @@ I changed the `lib/build.gradle` file:
 
 Then the error concerning "org/dom4j/DocumentException" was resolved.
 
-### Issue 7: java.lang.NoClassDefFoundError: com/google/gson/JsonSyntaxException
+### Problem1-8 com/google/gson/JsonSyntaxException
 
 The `./gradlew :lib:test` command still failed.
 
@@ -520,7 +483,7 @@ I edited the `lib/build.gradle` file:
 
 With this change, the error concerning "gson" was resolved.
 
-### Issue 8: java.lang.NoClassDefFoundError: org/eclipse/osgi/util/NLS
+### Problem1-9 org/eclipse/osgi/util/NLS
 
     ~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
     ./gradlew :lib:test
@@ -573,7 +536,7 @@ Probably this is the key. I edited the `lib/build.gradle`
 
 This change resolved the error concerning "org/eclipse/osgi/util/NLS".
 
-### Issue 9: java.lang.NoClassDefFoundError: org/apache/commons/lang/StringEscapeUtils
+### Problem1-10 org/apache/commons/lang/StringEscapeUtils
 
 The `.gradlew :lib:test` command still failed.
 
@@ -598,7 +561,7 @@ I changed the `lib/build.gradle` file:
 
 This change resolved the error concerning "org/apache/commons/lang/StringEscapeUtils".
 
-### Issue 10: java.lang.NoClassDefFoundError: org/openqa/selenium/WebElement
+### Problem1-11 org/openqa/selenium/WebElement
 
 The `./gradlew :lib:test` task still failed:
 
@@ -638,7 +601,7 @@ I edited the `lib/build.gradle` file:
 
 This change resolved the error concerning "WebElement".
 
-### Issue 11: print Classpath
+### Problem1-12 How to print Classpath
 
 I worked on constructing the classpath for the `lib` subproject. How does the content of classpath look like?
 
@@ -687,7 +650,7 @@ I got the following output:
 
 I could confirm that the classpath now includes `groovy-3.0.17.jar` and many others.
 
-### Issue 12: Confirm Versions
+### Problem1-13 How to confirm versions of runtime environment
 
 I made a custom Gradle task `printVersions` in the `lib/build.gradle`
 

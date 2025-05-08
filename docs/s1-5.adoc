@@ -1,0 +1,47 @@
+=== Problem1-5 JUnit Jupiter
+
+I ran the following command, which failed:
+
+[source,text]
+----
+$ ./gradlew :lib:test
+Starting a Gradle Daemon (subsequent builds will be faster)
+
+> Task :lib:compileTestGroovy FAILED
+startup failed:
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/test/groovy/com/kms/katalon/core/testobject/ObjectRepositoryFailingTest.groovy: 3: unable to resolve class org.junit.jupiter.api.Test
+ @ line 3, column 1.
+   import org.junit.jupiter.api.Test
+   ^
+   ...
+----
+
+The `org.junit.jupiter.api.Test` class belongs to the JUnit5 jar, which is not bundled in the Katalon Studio's distributable. I need to add the jar in the classpath for the `:lib:test` target.
+
+I edited the `lib/build.gradle` file:
+
+[source,text]
+----
+dependencies {
+    ...
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.engine
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    ...
+}
+----
+
+Also I edited the `settings.gradle` file:
+
+[source,text]
+----
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            ...
+            library('junit-jupiter-api', 'org.junit.jupiter:junit-jupiter-api:5.12.2')
+            library('junit-jupiter-engine', 'org.junit.jupiter:junit-jupiter-engine:5.12.2')
+            ...
+----
+
+With this change, the errors concerning "org.junit.jupiter.api" were resolved.

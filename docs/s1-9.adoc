@@ -1,0 +1,64 @@
+=== Problem1-9 org/eclipse/osgi/util/NLS
+
+[source,text]
+----
+~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+./gradlew :lib:test
+
+> Task :lib:test
+
+ObjectRepositoryFailingTest > test_findObject() FAILED
+    java.lang.NoClassDefFoundError at ObjectRepositoryFailingTest.groovy:11
+        Caused by: java.lang.ClassNotFoundException at ObjectRepositoryFailingTest.groovy:11
+----
+
+[source,text]
+----
+java.lang.NoClassDefFoundError: org/eclipse/osgi/util/NLS
+	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1017)
+	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:150)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:862)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:760)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:681)
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:639)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at com.kms.katalon.core.constants.StringConstants.<clinit>(StringConstants.java:56)
+	at com.kms.katalon.core.configuration.RunConfiguration.<clinit>(RunConfiguration.java:117)
+	at com.kms.katalon.core.logging.KeywordLogger.initShouldLogTestSteps(KeywordLogger.java:77)
+	at com.kms.katalon.core.logging.KeywordLogger.<init>(KeywordLogger.java:73)
+	at com.kms.katalon.core.logging.KeywordLogger.getInstance(KeywordLogger.java:59)
+	at com.kms.katalon.core.logging.KeywordLogger.getInstance(KeywordLogger.java:51)
+	at com.kms.katalon.core.testobject.ObjectRepository.<clinit>(ObjectRepository.java:54)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:467)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.lambda$createCallStaticSite$2(CallSiteArray.java:65)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:318)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallStaticSite(CallSiteArray.java:63)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallSite(CallSiteArray.java:156)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at com.kms.katalon.core.testobject.ObjectRepositoryFailingTest.test_findObject(ObjectRepositoryFailingTest.groovy:11)
+----
+
+What the hell is it "org/eclipse/osgi/util/NLS"? I have no idea. But I found the following line in the `katalon/.classpath`.
+
+[source,text]
+----
+	<classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/plugins/org.eclipse.osgi_3.20.0.v20240509-1421.jar"/>
+----
+
+Probably this is the key. I edited the `lib/build.gradle`
+
+[source,text]
+----
+dependencies {
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
+            include: [
+                    ...
+                    'org.eclipse.osgi*.jar',
+----
+
+This change resolved the error concerning "org/eclipse/osgi/util/NLS".

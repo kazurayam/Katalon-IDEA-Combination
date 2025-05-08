@@ -1,0 +1,45 @@
+=== Problem1-7 org/dom4j/DocumentException
+
+The `./gradlew :lib:test` command still failed.
+
+[source,text]
+----
+./gradlew :lib:test
+
+> Task :lib:test
+
+ObjectRepositoryFailingTest > test_findObject() FAILED
+    java.lang.NoClassDefFoundError at ObjectRepositoryFailingTest.groovy:11
+        Caused by: java.lang.ClassNotFoundException at ObjectRepositoryFailingTest.groovy:11
+----
+
+In the report, I found the detail:
+
+[source,text]
+----
+java.lang.NoClassDefFoundError: org/dom4j/DocumentException
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:467)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.lambda$createCallStaticSite$2(CallSiteArray.java:65)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:318)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallStaticSite(CallSiteArray.java:63)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallSite(CallSiteArray.java:156)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at com.kms.katalon.core.testobject.ObjectRepositoryFailingTest.test_findObject(ObjectRepositoryFailingTest.groovy:11)
+...
+----
+
+I changed the `lib/build.gradle` file:
+
+[source,text]
+----
+dependencies {
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
+            include: [
+                    ...
+                    'org.dom4j*.jar',
+----
+
+Then the error concerning "org/dom4j/DocumentException" was resolved.

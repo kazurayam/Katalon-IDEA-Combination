@@ -1,0 +1,30 @@
+=== Problem1-10 org/apache/commons/lang/StringEscapeUtils
+
+The `.gradlew :lib:test` command still failed.
+
+[source,text]
+----
+java.lang.NoClassDefFoundError: org/apache/commons/lang/StringEscapeUtils
+	at com.kms.katalon.core.testobject.ObjectRepository.findWebUIObject(ObjectRepository.java:365)
+	at com.kms.katalon.core.testobject.ObjectRepository.readTestObjectFile(ObjectRepository.java:273)
+	at com.kms.katalon.core.testobject.ObjectRepository.findTestObject(ObjectRepository.java:231)
+	at com.kms.katalon.core.testobject.ObjectRepository.findTestObject(ObjectRepository.java:181)
+	at com.kms.katalon.core.testobject.ObjectRepository$findTestObject.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at com.kms.katalon.core.testobject.ObjectRepositoryPassingTest.test_findObject(ObjectRepositoryPassingTest.groovy:18)
+----
+
+I changed the `lib/build.gradle` file:
+
+[source,text]
+----
+dependencies {
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
+            include: [
+                    ...
+                    'org.apache.commons.lang*.jar',
+----
+
+This change resolved the error concerning "org/apache/commons/lang/StringEscapeUtils".

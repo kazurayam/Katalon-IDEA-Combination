@@ -1,4 +1,4 @@
-= Know-how for Katalon - IntelliJ IDEA combination
+= Katalon - IntelliJ IDEA Combination Knowhow
 
 :ReposURL: https://www.github.com/kazurayam/Katalon-IDEA-Combination
 :TreeURL: {ReposURL}/tree/develop
@@ -7,9 +7,9 @@
 - link to the link:{ReposURL}/[repository]
 - link to the link:{PagesURL}/[this doc]
 
-include::s1_Objective.adoc[]
+include::s0_Objective.adoc[]
 
-include::s2_How_to_resolve_dependencies.adoc[]
+include::s1-0_How_to_resolve_dependencies.adoc[]
 
 include::s3_RunConfiguration_getProjectDir_returns_null_outside_katalon_project.adoc[]
 

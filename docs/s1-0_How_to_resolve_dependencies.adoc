@@ -1,0 +1,27 @@
+== Problem1: How to resolve external dependencies
+
+include::s1-1.adoc[]
+
+include::s1-2.adoc[]
+
+include::s1-3.adoc[]
+
+include::s1-4.adoc[]
+
+include::s1-5.adoc[]
+
+include::s1-6.adoc[]
+
+include::s1-7.adoc[]
+
+include::s1-8.adoc[]
+
+include::s1-9.adoc[]
+
+include::s1-10.adoc[]
+
+include::s1-11.adoc[]
+
+include::s1-12.adoc[]
+
+include::s1-13.adoc[]

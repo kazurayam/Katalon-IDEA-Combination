@@ -1,0 +1,42 @@
+=== Problem1-2 The jar of "com.kms.katalon.core" is required
+
+`./gradlew :lib:compileGroovy` command continued to fail with error.
+
+[source,text]
+----
+$ gradle :lib:compileGroovy
+
+> Task :lib:compileGroovy
+startup failed:
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 5: unable to resolve class com.kms.katalon.core.testobject.TestObject
+ @ line 5, column 1.
+   import com.kms.katalon.core.testobject.TestObject
+   ^
+----
+
+The message said that the `:lib:compileGroovy` task was unable to find the `com.kms.katalon.core.testobject.TestObject` class. I had to include the Katalon's Core jar in the classpath.
+
+In the `katalon/.classpath` file, I found the following line:
+
+[source,text]
+----
+<classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/plugins/com.kms.katalon.core_1.0.0.202504231120.jar" sourcepath="/Applications/Katalon Studio.app/Contents/Eclipse/configuration/resources/source/com.kms.katalon.core/com.kms.katalon.core-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Applications/Katalon%20Studio.app/Contents/Eclipse/configuration/resources/apidocs/com.kms.katalon.core/"/>
+		</attributes>
+	</classpathentry>
+----
+
+OK. I will include this jar in the classpath for `:lib:compileGroovy` target. I edited the `lib/build.gradle` file.
+
+```
+dependencies {
+    ...
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
+            include: [
+                    'com.kms.katalon.core*.jar',
+                    'com.kms.katalon.util*.jar'
+            ])
+```
+
+With this change, the errors concerning `com.kms.katalon.core` module were resolved.

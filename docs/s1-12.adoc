@@ -1,0 +1,26 @@
+=== Problem1-12 How to print Classpath
+
+I worked on constructing the classpath for the `lib` subproject. How does the content of classpath look like?
+
+I made a Gradle task `printClasspath` in the `lib` subproject.
+
+[source,text]
+----
+include::../lib/build.gradle[lines=93..99]
+----
+
+When I ran the `printClasspath` by
+
+[source,text]
+----
+$ ./gradlew :lib:printClasspath
+----
+
+I got the following output:
+
+[source,text]
+----
+include::./assets/classpath.txt[]
+----
+
+I could confirm that the classpath now includes `groovy-3.0.17.jar` and many others.
