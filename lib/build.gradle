@@ -3,10 +3,9 @@ plugins {
 }
 
 group = 'io.github.kazurayam'
-version = '0.1.1-SNAPSHOT'
+version = '0.1.1'
 
-import org.gradle.internal.os.OperatingSystem
-String resolveKatalonStudioInstallationDirectory() {
+static String resolveKatalonStudioInstallationDirectory() {
     OperatingSystem os = OperatingSystem.current()
     if (os.isMacOsX()) {
         return '/Applications/Katalon Studio.app/Contents/Eclipse'
@@ -16,7 +15,7 @@ String resolveKatalonStudioInstallationDirectory() {
     } else if (os.isLinux()) {
         throw new UnsupportedOperationException("I don't know")
     } else {
-        // Unknow OS
+        // Unknown OS
         throw new UnsupportedOperationException("Who knows?")
     }
 }
@@ -24,7 +23,7 @@ String resolveKatalonStudioInstallationDirectory() {
 ext {
     KATALON_STUDIO_INSTALLATION_DIRECTORY = resolveKatalonStudioInstallationDirectory()
     GroovyVersion = '3.0.17'
-    ARTIFACT_ID = 'my-ks-helper'
+    ARTIFACT_ID = 'my-custom-artifact'
 }
 
 repositories {
@@ -32,40 +31,34 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.kazurayam/monk-directory-scanner
-    implementation 'com.kazurayam:monk-directory-scanner:0.1.1'
-
-    // will look into the Katalon Studio installation directory
     implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/configuration/resources/lib",
             include: [
                     "groovy-${GroovyVersion}.jar"
             ]
     )
-    // look into the `katalon/.classpath` file for the paths of jar to include from the Katalon bundle
+
     implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
             include: [
-                    'com.fasterxml.jackson*.jar',
-                    'com.google.gson*.jar',
-
-                    // to import com.kms.katalon.core.testobject.TestObject
-                    // to import com.kms.katalon.core.testobject.SelectorMethod
-                    // to import com.kms.katalon.core.testobject.ObjectRepository
                     'com.kms.katalon.core*.jar',
                     'com.kms.katalon.util*.jar',
 
                     // to import groovy.lang.GroovyObject
                     '**/org.codehaus.groovy*/lib/groovy*-indy.jar',
 
-                    'org.apache.commons.lang*.jar',
+                    'slf4j*.jar',
                     'org.dom4j*.jar',
+                    'com.google.gson*.jar',
                     'org.eclipse.osgi*.jar',
-                    'org.seleniumhq.selenium.selenium-api*.jar',
-                    'slf4j*.jar'
+                    'org.apache.commons.lang*.jar',
+                    'org.seleniumhq.selenium.selenium-api*.jar'
             ])
 
-    // will look into the Maven Central repository
-    testImplementation("org.testng:testng:7.11.0")
-    testImplementation 'org.slf4j:slf4j-simple:2.0.16'
+    implementation libs.directoryscanner
+
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.engine
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    //testImplementation libs.slf4j.simple
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -76,7 +69,7 @@ java {
 }
 
 test {
-    useTestNG()
+    useJUnitPlatform()
 }
 
 tasks.register('printKatalonInstallation') {
@@ -85,12 +78,15 @@ tasks.register('printKatalonInstallation') {
     }
 }
 
+import org.gradle.internal.os.OperatingSystem
+import org.gradle.util.GradleVersion
 tasks.register('printVersions') {
     doLast {
         OperatingSystem os = OperatingSystem.current()
-        println "OS: ${os.toString()}"
-        println "Gradle: ${project.getGradle().getGradleVersion()}"
-        println "Groovy: ${GroovySystem.getVersion()}"
+        println "${os.toString()}"
+        println "Java ${JavaVersion.current()}"
+        println "Groovy ${GroovySystem.getVersion()}"
+        println GradleVersion.current().toString()
     }
 }
 

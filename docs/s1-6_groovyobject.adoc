@@ -1,0 +1,101 @@
+=== Problem1-6 groovy.lang.GroovyObject
+
+I continued trying `gradle :lib:test`, but failed
+
+[source,text]
+----
+~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+./gradlew :lib:test
+> Task :lib:compileTestGroovy FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':lib:compileTestGroovy'.
+> Unrecoverable compilation error: startup failed:
+  General error during conversion: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
+
+  java.lang.RuntimeException: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
+        at org.codehaus.groovy.control.CompilationUnit$IPrimaryClassNodeOperation.doPhaseOperation(CompilationUnit.java:977)
+        at org.codehaus.groovy.control.CompilationUnit.processPhaseOperations(CompilationUnit.java:672)
+        at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:636)
+        at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:611)
+        at org.gradle.api.internal.tasks.compile.ApiGroovyCompiler.execute(ApiGroovyCompiler.java:285)
+        at org.gradle.api.internal.tasks.compile.ApiGroovyCompiler.execute(ApiGroovyCompiler.java:67)
+        at org.gradle.api.internal.tasks.compile.GroovyCompilerFactory$DaemonSideCompiler.execute(GroovyCompilerFactory.java:90)
+        at org.gradle.api.internal.tasks.compile.GroovyCompilerFactory$DaemonSideCompiler.execute(GroovyCompilerFactory.java:76)
+        at org.gradle.api.internal.tasks.compile.daemon.AbstractIsolatedCompilerWorkerExecutor$CompilerWorkAction.execute(AbstractIsolatedCompilerWorkerExecutor.java:78)
+        at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+        at org.gradle.workers.internal.AbstractClassLoaderWorker$1.create(AbstractClassLoaderWorker.java:54)
+        at org.gradle.workers.internal.AbstractClassLoaderWorker$1.create(AbstractClassLoaderWorker.java:48)
+        at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+        at org.gradle.workers.internal.AbstractClassLoaderWorker.executeInClassLoader(AbstractClassLoaderWorker.java:48)
+        at org.gradle.workers.internal.IsolatedClassloaderWorker.run(IsolatedClassloaderWorker.java:49)
+        at org.gradle.workers.internal.IsolatedClassloaderWorker.run(IsolatedClassloaderWorker.java:30)
+        at org.gradle.workers.internal.WorkerDaemonServer.run(WorkerDaemonServer.java:96)
+        at org.gradle.workers.internal.WorkerDaemonServer.run(WorkerDaemonServer.java:65)
+        at org.gradle.process.internal.worker.request.WorkerAction$1.call(WorkerAction.java:138)
+        at org.gradle.process.internal.worker.child.WorkerLogEventListener.withWorkerLoggingProtocol(WorkerLogEventListener.java:41)
+        at org.gradle.process.internal.worker.request.WorkerAction.lambda$run$0(WorkerAction.java:135)
+        at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:80)
+        at org.gradle.process.internal.worker.request.WorkerAction.run(WorkerAction.java:127)
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+        at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+        at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+        at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+        at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:182)
+        at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:164)
+        at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:414)
+        at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+        at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
+  Caused by: java.lang.NoClassDefFoundError: groovy.lang.GroovyObject
+        at org.codehaus.groovy.ast.decompiled.AsmReferenceResolver.resolveClass(AsmReferenceResolver.java:46)
+        at org.codehaus.groovy.ast.decompiled.ClassSignatureParser.configureClass(ClassSignatureParser.java:42)
+        at org.codehaus.groovy.ast.decompiled.DecompiledClassNode.lazyInitSupers(DecompiledClassNode.java:189)
+        at org.codehaus.groovy.ast.decompiled.DecompiledClassNode.getGenericsTypes(DecompiledClassNode.java:80)
+        at org.codehaus.groovy.control.GenericsVisitor.checkGenericsUsage(GenericsVisitor.java:157)
+        at org.codehaus.groovy.control.GenericsVisitor.checkGenericsUsage(GenericsVisitor.java:151)
+        at org.codehaus.groovy.control.GenericsVisitor.visitDeclarationExpression(GenericsVisitor.java:113)
+        at org.codehaus.groovy.ast.expr.DeclarationExpression.visit(DeclarationExpression.java:89)
+        at org.codehaus.groovy.ast.CodeVisitorSupport.visitExpressionStatement(CodeVisitorSupport.java:117)
+        at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitExpressionStatement(ClassCodeVisitorSupport.java:200)
+        at org.codehaus.groovy.ast.stmt.ExpressionStatement.visit(ExpressionStatement.java:40)
+        at org.codehaus.groovy.ast.CodeVisitorSupport.visitBlockStatement(CodeVisitorSupport.java:86)
+        at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitBlockStatement(ClassCodeVisitorSupport.java:164)
+        at org.codehaus.groovy.ast.stmt.BlockStatement.visit(BlockStatement.java:69)
+        at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitClassCodeContainer(ClassCodeVisitorSupport.java:138)
+        at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitConstructorOrMethod(ClassCodeVisitorSupport.java:111)
+        at org.codehaus.groovy.control.GenericsVisitor.visitConstructorOrMethod(GenericsVisitor.java:93)
+        at org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitMethod(ClassCodeVisitorSupport.java:106)
+        at org.codehaus.groovy.ast.ClassNode.visitMethods(ClassNode.java:1094)
+        at org.codehaus.groovy.ast.ClassNode.visitContents(ClassNode.java:1087)
+        at org.codehaus.groovy.control.GenericsVisitor.visitClass(GenericsVisitor.java:74)
+        at org.codehaus.groovy.control.CompilationUnit.lambda$addPhaseOperations$5(CompilationUnit.java:221)
+        at org.codehaus.groovy.control.CompilationUnit$IPrimaryClassNodeOperation.doPhaseOperation(CompilationUnit.java:943)
+        ... 36 more
+
+  1 error
+----
+
+I have never seen such an error "NoClassDefFound: groovy.lang.GroovyObject". I made a lot of search, eventually found a workaround.
+
+I edited the `lib/build.gradle` file.
+
+[source,text]
+----
+dependencies {
+    ...
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
+            include: [
+                    ...
+                    // to import groovy.lang.GroovyObject
+                    '**/org.codehaus.groovy*/lib/groovy*-indy.jar',
+
+----
+
+With this change, the error concerning `groovy.lang.GroovyObject` was resolved.

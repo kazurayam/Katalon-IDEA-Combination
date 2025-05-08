@@ -1,0 +1,8 @@
+== Problem2 `RunConfiguration.getProjectDir()` returns null outside katalon project
+
+include::s2-1_blocker.adoc[]
+
+include::s2-2_solution.adoc[]
+
+include::s2-3_description.adoc[]
+

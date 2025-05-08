@@ -1,0 +1,7 @@
+== Extensibility
+
+In this project, I employed IntelliJ IDEA as it is my favorite IDE. I believe that you can use other IDE for the same role as long as it works with the Gradle build tool. You may want to try Visual Studio Code with Java Extension, or Eclipse.
+
+In this project, I used JUnit Jupiter (JUnit5) for unit-testing in the `lib` subproject. Of course, you can choose any unit-testing frameworks: JUnit4, TestNG, Spock. I suppose you can even choose Cucumber-Java, though I am not familiar with it.
+
+In this project, I wrote every classes in Groovy. In the `lib` subproject, you can write codes in other JVM-programming languages: Java, Kotlin, Scala; as long as the IDE of your choice supports it.

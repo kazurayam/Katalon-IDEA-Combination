@@ -1,0 +1,77 @@
+=== Problem1-1 The jar of Groovy is required
+
+In the `lib` subproject, I wrote a Groovy class
+
+- link:{TreeURL}/src/main/io/github/kazurayam/testobject/ObjectRepositoryAccessor.groovy[]
+
+I tried to compile it in the commandline, and got an error.
+
+[source,text]
+----
+$ ./gradlew :lib:compileGroovy
+> Task :lib:compileGroovy FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':lib:compileGroovy'.
+> Cannot infer Groovy class path because no Groovy Jar was found on class path: [/Users/kazurayam/tmp/Katalon-IDEA-Combination/lib/build/classes/java/main]
+----
+
+The `lib:compileGroovy` task required the Groovy jar of some version, but I did not configured it. That's the cause of the error.
+
+Where is the Groovy's jar file?
+
+Every Katalon project has a file named `.classpath`. Katalon Studio list the jar files it bundles and are required to run a Test Case. See the `katlaon/.classpath`
+
+- link:{TreeURL}/katalon/.classpath[katalon/.classpath]
+
+In the `.classpath` file, I found the following line:
+
+```
+	<classpathentry kind="lib" path="/Applications/Katalon Studio.app/Contents/Eclipse/configuration/resources/lib/groovy-3.0.17.jar"/>
+```
+
+This is the Groovy jar file bundled in the Katalon Studio distribution. So, I should use it for the `lib` subproject as well.
+
+I edited the `lib/build.gradle` file to use the Groovy jar which is located in the Katalon Studio installation directory.
+
+[source,text]
+----
+plugins {
+    id 'groovy'
+}
+...
+static String resolveKatalonStudioInstallationDirectory() {
+    OperatingSystem os = OperatingSystem.current()
+    if (os.isMacOsX()) {
+        return '/Applications/Katalon Studio.app/Contents/Eclipse'
+    } else if (os.isWindows()) {
+        String userHome = System.getProperty("user.home")
+        return "${userHome}/Katalon_Studio_Windows_64-10.2.0"
+    } else if (os.isLinux()) {
+        throw new UnsupportedOperationException("I don't know")
+    } else {
+        // Unknown OS
+        throw new UnsupportedOperationException("Who knows?")
+    }
+}
+
+ext {
+    KATALON_STUDIO_INSTALLATION_DIRECTORY = resolveKatalonStudioInstallationDirectory()
+    GroovyVersion = '3.0.17'
+}
+
+dependencies {
+
+    // will look into the Katalon Studio installation directory
+
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/configuration/resources/lib",
+            include: [
+                    "groovy-${GroovyVersion}.jar"
+            ]
+    )
+----
+
+With this change, the error "Cannot infer Groovy class path" was resolved.
+

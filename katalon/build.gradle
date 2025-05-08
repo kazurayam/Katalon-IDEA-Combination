@@ -1,52 +1,68 @@
 plugins {
-    id("com.katalon.gradle-plugin") version "0.1.2"
+    id 'groovy'
 }
-
-// run "$ gradle :katalon:katalonCopyDependencies" command to download
-// the monk-directory-scanner-0.1.1.jar into the "Drivers" folder
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation("com.kazurayam:monk-directory-scanner:0.1.1")
-}
-
 ext {
-    LibVersion = '0.1.0'
+    ARTIFACT_ID = 'my-custom-artifact'
+    ARTIFACT_VERSION = '0.1.1'
+    userHome = System.getProperty('user.home')
+    rootProjectDir = rootProject.projectDir as File
+    MDSVersion = '0.1.1'
 }
 
-tasks.register('cleanDrivers') {
+
+tasks.register('importLibArtifact') {
     group = 'Custom'
-    description = 'remove jars out of the Drivers folder'
+    description = "import the KS_ObjectRepositoryGarbageCollector jar and the MockDirectoryScanner jar into the Drivers folder"
     doFirst {
-        delete 'Drivers'
-        mkdir 'Drivers'
+        delete fileTree("Drivers").matching {
+            include "${ARTIFACT_ID}-*.jar"
+        }
+    }
+    doLast {
+        copy {
+            into layout.projectDirectory.dir("Drivers")
+            from("${rootProject.projectDir}/lib/build/libs") {
+                include "${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar"
+            }
+        }
+    }
+}
+
+tasks.register('importMDS') {
+    group = 'Custom'
+    description = "import the KS_ObjectRepositoryGarbageCollector jar and the MockDirectoryScanner jar into the Drivers folder"
+    doFirst {
+        delete fileTree("Drivers").matching {
+            include "monk-directory-scanner-*.jar"
+        }
+    }
+    doLast {
+        copy {
+            into layout.projectDirectory.dir("Drivers")
+            from("$userHome/.m2/repository/com/kazurayam/monk-directory-scanner/${MDSVersion}") {
+                include "**/monk-directory-scanner-${MDSVersion}.jar"
+            }
+        }
     }
 }
 
 tasks.register('importDrivers') {
     group = 'Custom'
-    description = 'import the jar from the lib subproject'
-    doLast {
-        copy {
-            into layout.projectDirectory.dir('Drivers')
-            from("${rootProject.projectDir}/lib/build/libs") {
-                include 'my-ks-helper-*.jar'
-            }
-        }
-    }
-    dependsOn 'cleanDrivers', 'katalonCopyDependencies'
+    description = 'run importLibArtifact and importMonDirectoryScanner'
+    dependsOn importLibArtifact, importMDS
 }
 
-tasks.register('cleanProject', Delete) {
+tasks.register("cleanProject", Delete) {
     group = 'Custom'
-    description = 'remove the bin folder and others to clean up the Katalo project'
-    delete 'bin'
-    delete 'Libs'
-    delete '.cache'
+    description = "remove the bin folder and others to clean up the Katalon project"
+    doFirst {
+        delete '.cache'
+        delete 'bin'
+        delete 'Libs'
+    }
 }
-
-
-

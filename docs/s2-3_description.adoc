@@ -1,0 +1,47 @@
+=== Description
+
+I developed 2 Groovy classes in the `lib` subproject. These classes enabled to me to resolve the aforementioned problems.
+
+==== `KatalonProjectDirectoryResolver`
+
+- link:{TreeURL}/lib/src/main/groovy/io/github/kazurayam/ks/configuration/KatalonProjectDirectoryResolver.groovy[`io.github.kazurayam.ks.configuration.KatalonProjectDirectoryResolver`]
+
+[source,groovy]
+----
+include::../lib/src/main/groovy/io/github/kazurayam/ks/configuration/KatalonProjectDirectoryResolver.groovy[]
+----
+
+The static `KatalonProjectDirectoryResolver.getProjectDir()` method will return a Path object, which is the `katalon` subproject's root folder.
+
+When the method is called inside Katalon Studio runtime, the method simply returns a non-null value returned by `RunConfiguration.getProjectDir()`.
+
+When the `RunConfiguration.getProjectDir()` returned null, the method presumes that it was invoked in the sibling `lib` subproject, and returns a path `../katalon` relative to the `lib` subproject.
+
+As you can perceive, the `KatalonProjectDirectoryResolver` is NOT reusable; it is designed to be used solely in the `lib` subproject of this `Katalon-IDEA-Combination` project.
+
+==== `RunConfigurationConfigurator`
+
+- link:{TreeURL}/lib/src/main/groovy/io/github/kazurayam/ks/configuration/RunConfigurationConfigurator.groovy[`io.github.kazurayam.ks.configuration.RunConfigurationConfigurator`]
+
+[source,groovy]
+----
+include::../lib/src/main/groovy/io/github/kazurayam/ks/configuration/RunConfigurationConfigurator.groovy[]
+----
+
+When the `RunConfigurationConfigurator.configureProjectDir()` is called anywhere inside the `lib` subproject, it will alter the internal state of the singleton instance of `com.kms.katalon.core.configuration.RunConfiguration` class. See the following junit5 test:
+
+- link:{TreeURL}/lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationPassingTest.groovy[]
+
+[source,text]
+----
+include::../lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationPassingTest.groovy[]
+----
+
+This test will pass, which proves that, once configured, the call to `RunConfiguration.getProjectDir()` will return the path of sibling `katalon` subproject.
+
+Provided with the `RunConfigurationConfigurator` class, I could develop good number of unit-test in the `lib` subproject while utilizing the files in the`katalon` as the test fixture. In fact, my codes in the `lib` subproject could get access to any resources inside the `katalon` subproject: Test Objects, Test Case scripts, Test Listeners, Test Suites, Profiles.
+
+
+
+
+

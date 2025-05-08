@@ -1,0 +1,15 @@
+=== Problem1-13 How to confirm versions of runtime environment
+
+I made a custom Gradle task `printVersions` in the `lib/build.gradle`
+
+[source,text]
+----
+include::../lib/build.gradle[lines=81..91]
+----
+
+When I ran this, I got the following output:
+
+[source,text]
+----
+include::./assets/versions.txt[]
+----

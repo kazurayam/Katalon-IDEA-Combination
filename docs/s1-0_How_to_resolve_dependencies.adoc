@@ -1,0 +1,27 @@
+== Problem1: How to resolve external dependencies for `lib` subproject?
+
+include::s1-1_groovy.adoc[]
+
+include::s1-2_katalon_core.adoc[]
+
+include::s1-3_slf4j.adoc[]
+
+include::s1-4_directoryscanner.adoc[]
+
+include::s1-5_junit5.adoc[]
+
+include::s1-6_groovyobject.adoc[]
+
+include::s1-7_dom4j.adoc[]
+
+include::s1-8_gson.adoc[]
+
+include::s1-9_osgi.adoc[]
+
+include::s1-10.adoc[]
+
+include::s1-11.adoc[]
+
+include::s1-12.adoc[]
+
+include::s1-13.adoc[]

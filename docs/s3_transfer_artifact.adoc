@@ -1,0 +1,55 @@
+== Problem3 How to transfer the `lib` artifact from into Katalon project
+
+I can generate a jar file which contains the classes developed in the `lib` subproject. Run this command:
+
+[source,text]
+----
+$ ./gradlew clean build
+----
+
+Then, a jar will be generated in the `lib/build/libs` folder:
+
+[source,text]
+----
+~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+tree lib/build/libs
+lib/build/libs
+└── my-custom-artifact-0.1.1.jar
+
+1 directory, 1 file
+----
+
+Now, I need to import this jar from the `lib` into the sibling `katalon` subproject in order to make my custom classes (e.g, `io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor`) available to the Test Case scripts in the sibling `katalon` subproject.
+
+I made a Grable build in the `katalon` subproject.
+
+- link:{TreeURL}/katalon/build.gradle[]
+
+[source,groovy]
+----
+include::../katalon/build.gradle[lines=1..34]
+----
+
+When I run the `:katalon:importLibArtifact` task, the jar file will be copied into the `Drivers` folder of the Katalon project.
+
+[source,text]
+----
+~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+gradle :katalon:importLibArtifact
+
+BUILD SUCCESSFUL in 1s
+1 actionable task: 1 executed
+----
+
+[source,text]
+----
+~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+tree ./katalon/Drivers
+./katalon/Drivers
+├── ...
+└── my-custom-artifact-0.1.1.jar
+
+1 directory, 2 files
+----
+
+I will close the Katalon project once and reopen it. Then Katalon Studio will recognize the updated jar.

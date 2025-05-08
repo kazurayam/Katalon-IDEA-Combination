@@ -1,0 +1,29 @@
+2025-05-08 07:00:39.842 INFO  c.k.katalon.core.main.TestCaseExecutor   - --------------------
+2025-05-08 07:00:39.845 INFO  c.k.katalon.core.main.TestCaseExecutor   - START Test Cases/misc/listTestObjects
+2025-05-08 07:00:40.484 DEBUG testcase.listTestObjects                 - 1: projectDir = Paths.get(getProjectDir())
+2025-05-08 07:00:40.502 DEBUG testcase.listTestObjects                 - 2: println(projectDir=$projectDir)
+projectDir=/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon
+2025-05-08 07:00:40.574 DEBUG testcase.listTestObjects                 - 3: objectRepositoryDir = projectDir.resolve("Object Repository")
+2025-05-08 07:00:40.612 DEBUG testcase.listTestObjects                 - 4: assert Files.exists(objectRepositoryDir)
+2025-05-08 07:00:40.658 DEBUG testcase.listTestObjects                 - 5: accessor = ObjectRepositoryAccessor$Builder(objectRepositoryDir).build()
+2025-05-08 07:00:40.786 DEBUG testcase.listTestObjects                 - 6: list = accessor.getTestObjectIdList()
+2025-05-08 07:00:40.831 DEBUG testcase.listTestObjects                 - 7: list.each({ io.github.kazurayam.ks.testobject.TestObjectId toi -> ... })
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_AppointmentConfirmation/lbl_Comment.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_AppointmentConfirmation/lbl_Facility.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_AppointmentConfirmation/lbl_HospitalReadmission.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_AppointmentConfirmation/lbl_Program.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_AppointmentConfirmation/lbl_VisitDate.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/btn_BookAppointment.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/chk_Medicaid.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/chk_Medicare.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/chk_None.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/chk_Readmission.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/div_Appointment.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/lst_Facility.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/txt_Comment.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraAppointment/txt_VisitDate.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_CuraHomepage/btn_MakeAppointment.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/btn_Login.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/txt_Password.rs
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon/Object Repository/Page_Login/txt_UserName.rs
+2025-05-08 07:00:40.899 INFO  c.k.katalon.core.main.TestCaseExecutor   - END Test Cases/misc/listTestObjects

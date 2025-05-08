@@ -1,0 +1,48 @@
+=== Problem1-4 The external jar which is missing from the Katalon's distribution
+
+The `:lib:compileGroovy` task failed yet.
+
+[source,text]
+----
+gradle :lib:compileGroovy
+
+> Task :lib:compileGroovy
+startup failed:
+/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 3: unable to resolve class com.kazurayam.ant.DirectoryScanner
+ @ line 3, column 1.
+   import com.kazurayam.ant.DirectoryScanner
+   ^
+----
+
+The `com.kazurayam.ant.DirectoryScanner` is available at the Maven Central repository
+
+- https://mvnrepository.com/artifact/com.kazurayam/monk-directory-scanner
+
+This jar is not bundled in the Katalon Studio's distributable.
+
+This type of external jar is easiest to include in the classpath for the `:lib:compileGroovy` task. I edited the `lib/build.gradle` file:
+
+[source,text]
+----
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    ...
+    implementation libs.directoryscanner
+
+----
+
+And I edited the `settings.gradle` file in the rootProject directory:
+
+[source,text]
+----
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            library('directoryscanner', 'com.kazurayam:monk-directory-scanner:0.1.1')
+            ...
+----
+
+With this change, finally, the `:lib:compileGroovy` task succeeded.

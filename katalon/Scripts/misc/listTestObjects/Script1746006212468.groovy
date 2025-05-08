@@ -7,20 +7,24 @@ import com.kms.katalon.core.configuration.RunConfiguration
 import io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor
 import io.github.kazurayam.ks.testobject.TestObjectId
 
+// find the path of "katalon" project folder 
 Path projectDir = Paths.get(RunConfiguration.getProjectDir())
+println "projectDir=${projectDir}"
+
+// find the path of "Object Repository" folder
 Path objectRepositoryDir = projectDir.resolve("Object Repository")
 assert Files.exists(objectRepositoryDir)
 
+// get an instance of ObjectRepositoryAccessor
 ObjectRepositoryAccessor accessor = 
-	new ObjectRepositoryAccessor.Builder(objectRepositoryDir)
-		.includeFile("Page_AppointmentConfirmation/*")
-		.includeFile("Page_CuraAppointment/*")
-		.includeFile("Page_CuraHomepage/*")
-		.includeFile("Page_Login/*")
-		.build()
-		
+	new ObjectRepositoryAccessor.Builder(objectRepositoryDir).build()
+
+// get the list of TestObjectId contained in the "Object Repository"
 List<TestObjectId> list = accessor.getTestObjectIdList()
 
-list.each { s ->
-	println s
+// print the absolute path of the rs files in the "Object Repository"
+list.each { TestObjectId toi ->
+	Path relativePath = toi.getRelativePath()
+	Path absolutePath = objectRepositoryDir.resolve(relativePath)
+	println absolutePath
 }

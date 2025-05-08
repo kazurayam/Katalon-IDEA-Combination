@@ -1,0 +1,50 @@
+=== Problem1-8 com/google/gson/JsonSyntaxException
+
+The `./gradlew :lib:test` command still failed.
+
+[source,text]
+----
+~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+./gradlew :lib:test
+
+> Task :lib:test
+
+ObjectRepositoryFailingTest > test_findObject() FAILED
+    java.lang.NoClassDefFoundError at ObjectRepositoryFailingTest.groovy:11
+        Caused by: java.lang.ClassNotFoundException at ObjectRepositoryFailingTest.groovy:11
+----
+
+The report showed the detail:
+
+[source,text]
+----
+java.lang.NoClassDefFoundError: com/google/gson/JsonSyntaxException
+	at com.kms.katalon.core.logging.KeywordLogger.initShouldLogTestSteps(KeywordLogger.java:77)
+	at com.kms.katalon.core.logging.KeywordLogger.<init>(KeywordLogger.java:73)
+	at com.kms.katalon.core.logging.KeywordLogger.getInstance(KeywordLogger.java:59)
+	at com.kms.katalon.core.logging.KeywordLogger.getInstance(KeywordLogger.java:51)
+	at com.kms.katalon.core.testobject.ObjectRepository.<clinit>(ObjectRepository.java:54)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:467)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.lambda$createCallStaticSite$2(CallSiteArray.java:65)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:318)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallStaticSite(CallSiteArray.java:63)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallSite(CallSiteArray.java:156)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at com.kms.katalon.core.testobject.ObjectRepositoryFailingTest.test_findObject(ObjectRepositoryFailingTest.groovy:11)
+----
+
+I edited the `lib/build.gradle` file:
+
+[source,text]
+----
+dependencies {
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
+            include: [
+                    ...
+                    'com.google.gson*.jar',
+----
+
+With this change, the error concerning "gson" was resolved.

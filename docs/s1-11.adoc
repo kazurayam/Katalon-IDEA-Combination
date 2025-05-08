@@ -1,0 +1,45 @@
+=== Problem1-11 org/openqa/selenium/WebElement
+
+The `./gradlew :lib:test` task still failed:
+
+[source,text]
+----
+java.lang.NoClassDefFoundError: org/openqa/selenium/WebElement
+at java.base/java.lang.Class.getDeclaredMethods0(Native Method)
+at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3402)
+at java.base/java.lang.Class.privateGetPublicMethods(Class.java:3427)
+at java.base/java.lang.Class.getMethods(Class.java:2019)
+at java.desktop/com.sun.beans.introspect.MethodInfo.get(MethodInfo.java:70)
+at java.desktop/com.sun.beans.introspect.ClassInfo.getMethods(ClassInfo.java:80)
+at java.desktop/java.beans.Introspector.getTargetMethodInfo(Introspector.java:1029)
+at java.desktop/java.beans.Introspector.getBeanInfo(Introspector.java:446)
+at java.desktop/java.beans.Introspector.getBeanInfo(Introspector.java:195)
+at groovy.lang.MetaClassImpl.lambda$addProperties$8(MetaClassImpl.java:3401)
+at java.base/java.security.AccessController.doPrivileged(AccessController.java:569)
+at groovy.lang.MetaClassImpl.addProperties(MetaClassImpl.java:3401)
+at groovy.lang.MetaClassImpl.reinitialize(MetaClassImpl.java:3383)
+at groovy.lang.MetaClassImpl.initialize(MetaClassImpl.java:3376)
+at org.codehaus.groovy.reflection.ClassInfo.getMetaClassUnderLock(ClassInfo.java:273)
+at org.codehaus.groovy.reflection.ClassInfo.getMetaClass(ClassInfo.java:315)
+at org.codehaus.groovy.runtime.metaclass.MetaClassRegistryImpl.getMetaClass(MetaClassRegistryImpl.java:258)
+at org.codehaus.groovy.runtime.InvokerHelper.getMetaClass(InvokerHelper.java:1017)
+at org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallStaticSite(CallSiteArray.java:71)
+at org.codehaus.groovy.runtime.callsite.CallSiteArray.createCallSite(CallSiteArray.java:156)
+at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+at com.kms.katalon.core.webui.keyword.WebUiBuiltinKeywordsTest.test_comment(WebUiBuiltinKeywordsTest.groovy:10)
+----
+
+I edited the `lib/build.gradle` file:
+
+[source,text]
+----
+dependencies {
+    implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/plugins",
+            include: [
+                    ...
+                    'org.seleniumhq.selenium.selenium-api*.jar',
+----
+
+This change resolved the error concerning "WebElement".

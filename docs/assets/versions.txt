@@ -1,0 +1,4 @@
+Mac OS X 14.7.5 x86_64
+Java 17
+Groovy 3.0.17
+Gradle 8.4
