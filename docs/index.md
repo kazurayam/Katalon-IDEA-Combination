@@ -673,25 +673,25 @@ When I ran this, I got the following output:
 
 ## Problem2 `RunConfiguration.getProjectDir()` returns null outside katalon project
 
-### The blocker problem
+### A blocker problem
 
-See the source of [Test Cases/misc/listTestObjects](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy). I called `com.kms.katalon.core.configuration.RunConfiguration.getProjectDir()` to find the path of "katalon" project.
+See the source of [Test Cases/misc/listTestObjects](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy). This TestCase calls `com.kms.katalon.core.configuration.RunConfiguration.getProjectDir()` to find the path of the "katalon" project.
 
     // find the path of "katalon" project folder 
     Path projectDir = Paths.get(RunConfiguration.getProjectDir())
     println "projectDir=${projectDir}"
 
-When I ran this code in Katalon Studio, it printed the path of the `katalon` project folder successfully.
+When I ran this TestCase in Katalon Studio, it successfully ran and printed the path of the `katalon` project folder.
 
     2025-05-08 07:00:40.484 DEBUG testcase.listTestObjects                 - 1: projectDir = Paths.get(getProjectDir())
     2025-05-08 07:00:40.502 DEBUG testcase.listTestObjects                 - 2: println(projectDir=$projectDir)
     projectDir=/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/katalon
 
-Yes, `RunConfiguration.getProjectDir()` is the established way of obtaining the file path of a Katalon project’s folder. It works properly in Katalon Runtime Engine as well.
+Yes, `RunConfiguration.getProjectDir()` is the established way of obtaining the OS path of a Katalon project’s folder. It works properly in Katalon Runtime Engine as well.
 
 However, `RunConfiguration.getProjectDir()` does not work outside Katalon Studio. I wrote a JUnit test:
 
--   [`lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationFailingTest.groovy`](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/lib/listTestObjects/Script1746006212468.groovy)
+-   <https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationFailingTest.groovy>
 
 <!-- -->
 
@@ -738,15 +738,15 @@ When I ran this JUnit test, it failed.
         at app//com.kms.katalon.core.configuration.RunConfigurationFailingTest.test_getProjectDir(RunConfigurationFailingTest.groovy:11)
         ...
 
-The **`RunConfiguration.getProjectDir()` returned null in the `lib` subproject**!
+**The `RunConfiguration.getProjectDir()` returned null in the `lib` subproject**!
 
-This is a serious blocker for me. If my codes in the `lib` subproject can not get the path of `katalon` project folder, my codes can not get the path of `Object Repository` folder and the Test Objects at all. I am at a loss what to do in the `lib` subproject.
+This is a serious blocker for me. Without the path of `Object Repository` in the `katalon` subproject, I can not perform any unit-tests for my codes in the `lib` subproject.
 
-### The resolution
+### Solution
 
-I invented a magic spell: `io.github.kazurayam.ks.configuration.RunConfigurationConfigurator`. Later I will explain what it does. See how it works as in the following JUnit test:
+I invented a magic spell: `io.github.kazurayam.ks.configuration.RunConfigurationConfigurator`. See how it works as in the following JUnit test:
 
--   [`lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationPassingTest.groovy`](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/lib/listTestObjects/Script1746006212468.groovy)
+-   <https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationPassingTest.groovy>
 
 <!-- -->
 
@@ -773,11 +773,13 @@ I invented a magic spell: `io.github.kazurayam.ks.configuration.RunConfiguration
         }
     }
 
-When I ran this JUnit test, it passed. This means, a call to `RunConfiguration.getProjectDir()` in a JUnit test in the `lib` subproject successfully returned the path of the `katalon` subproject. The issue has been resolved!
+Please find the `@BeforeAll`-annotaed method calls `RunConfigurationConfigurator.configureProjectDir()`. This call alters the internal state of the singleton instance of `com.kms.katalon.core.configuration.RunConguration` object.
+
+When I ran this JUnit test, it passed. This means, a call to `RunConfiguration.getProjectDir()` in a JUnit test in the `lib` subproject successfully returned the path of the sibling `katalon` subproject. The issue has been magically resolved!
 
 ### Description
 
-I developed 2 tricky Groovy classes.
+I developed 2 Groovy classes in the `lib` subproject. These classes enabled to me to resolve the aforementioned problems.
 
 #### `KatalonProjectDirectoryResolver`
 
@@ -822,22 +824,96 @@ I developed 2 tricky Groovy classes.
 
 The static `KatalonProjectDirectoryResolver.getProjectDir()` method will return a Path object, which is the `katalon` subproject’s root folder.
 
-When the method is called inside Katalon Studio runtime, the method simply returns a non-null value returned by `RunConfiguration.getProjectDir()`. When the `RunConfiguration.getProjectDir()` returned null, the method presumes that it was invoked in the sibling `lib` subproject, and returns a path `../katalon` relative the the `lib` subproject.
+When the method is called inside Katalon Studio runtime, the method simply returns a non-null value returned by `RunConfiguration.getProjectDir()`.
 
-As you can perceive, the `KatalonProjectDirectoryResolver` is designed for limited use local to the `lib` subproject of this `Katalon-IDEA-Combination` project.
+When the `RunConfiguration.getProjectDir()` returned null, the method presumes that it was invoked in the sibling `lib` subproject, and returns a path `../katalon` relative to the `lib` subproject.
+
+As you can perceive, the `KatalonProjectDirectoryResolver` is NOT reusable; it is designed to be used solely in the `lib` subproject of this `Katalon-IDEA-Combination` project.
 
 #### `RunConfigurationConfigurator`
 
+-   [`io.github.kazurayam.ks.configuration.RunConfigurationConfigurator`](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/lib/src/main/groovy/io/github/kazurayam/ks/configuration/RunConfigurationConfigurator.groovy)
+
+<!-- -->
+
+    package io.github.kazurayam.ks.configuration
+
+    import com.kms.katalon.core.configuration.RunConfiguration
+    import com.kms.katalon.core.constants.StringConstants
+
+    class RunConfigurationConfigurator {
+
+        /**
+         * When run in the `<rootProjectDir>/lib` project, this method will
+         * configure the `RunConfiguration` instance so that the call to
+         * `getProjectDir()` returns the path of `<rootProjectDir>/katalon` directory.
+         * When run in the `<rootProjectDir>/katalon` project, this method will
+         * do nothing. Effectively a call to `RunConfiguration.getProjectDir()` will
+         * return the path of `<rootProjectDir>/katalon` directory.
+         */
+        static void configureProjectDir() {
+            if (RunConfiguration.getProjectDir() == null ||
+                    RunConfiguration.getProjectDir() == "null") {
+                // the code was invoked outside the Katalon Studio runtime Environment,
+                // Perhaps, in the subproject `lib` next to the `katalon` project.
+                // We want to configure the RunConfiguration instance to return the directory of
+                // the `katalon` project
+                Map<String, Object> executionSettingMap = new HashMap<>()
+                executionSettingMap.put(StringConstants.CONF_PROPERTY_PROJECT_DIR,
+                        KatalonProjectDirectoryResolver.getProjectDir().toString())
+                RunConfiguration.setExecutionSetting(executionSettingMap)
+            } else {
+                // the code was invoked inside the Katalon Studio runtime environment;
+                // nothing to do
+            }
+        }
+    }
+
+When the `RunConfigurationConfigurator.configureProjectDir()` is called anywhere inside the `lib` subproject, it will alter the internal state of the singleton instance of `com.kms.katalon.core.configuration.RunConfiguration` class. See the following junit5 test:
+
+-   <https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationPassingTest.groovy>
+
+<!-- -->
+
+    package com.kms.katalon.core.configuration
+
+    import io.github.kazurayam.ks.configuration.RunConfigurationConfigurator
+    import org.junit.jupiter.api.BeforeAll
+    import org.junit.jupiter.api.Test
+
+    import static org.junit.jupiter.api.Assertions.assertTrue
+
+    class RunConfigurationPassingTest {
+
+        @BeforeAll
+        static void beforeAll() {
+            // the magic spell
+            RunConfigurationConfigurator.configureProjectDir()
+        }
+
+        @Test
+        void test_getProjectDir() {
+            String projectDir = RunConfiguration.getProjectDir()
+            assertTrue(projectDir.endsWith("katalon"), "projectDir=${projectDir}")
+        }
+    }
+
+This test will pass, which proves that, once configured, the call to `RunConfiguration.getProjectDir()` will return the path of sibling `katalon` subproject.
+
+Provided with the `RunConfigurationConfigurator` class, I could develop good number of unit-test in the `lib` subproject while utilizing the files in the\`katalon\` as the test fixture. In fact, my codes in the `lib` subproject could get access to any resources inside the `katalon` subproject.
+
 ## Problem3 How to transfer the `lib` artifact from into Katalon project
 
-## images
+## Conclusion
 
--   [images/0\_rootProject\_opened\_in\_IDEA.png](images/0_rootProject_opened_in_IDEA.png)
+I made a Gradle Multiproject with 2 subprojects: `katalon` and `lib`. I could develop the `lib` subproject using IntelliJ IDEA with JUnit5 and Gradle. I could export/import the jar from the `lib` into the `katalon` subproject. I could utilized the jar in the Katalon project without any problem.
 
--   [images/1\_katalon\_subproject\_opened\_in\_GUI.png](images/1_katalon_subproject_opened_in_GUI.png)
+I believe that I could seamlessly combine Katalon Studio and IntelliJ IDEA.
 
-## References
+## Extensibility
 
--   <https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/>
+In this project, I employed IntelliJ IDEA as it is my favorite IDE. I believe that you can use other IDE for the same role as long as it works with the Gradle build tool. You may want to try Visual Studio Code with Java Extension, or Eclipse.
 
--   <https://forum.katalon.com/t/i-cant-run-unit-tests-with-junit-in-katalon-studio/120315/9>
+In this project, I used JUnit Jupiter (JUnit5) for unit-testing in the `lib` subproject. Of course, you can choose any unit-testing frameworks: JUnit4, TestNG, Spock. I suppose you can even choose Cucumber-Java, though I am not familiar with it.
+
+In this project, I wrote every classes in Groovy. In the `lib` subproject, you can write codes in other JVM-programming languages: Java, Kotlin, Scala; as long as the IDE of your choice supports it.

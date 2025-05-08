@@ -103,7 +103,7 @@ I ended up with over 40 .groovy classes. I could perform enough unit-tests over 
 
 **Did I enjoy that? --- No, I didn't. It was damn hard.** 
 
-Katalon Studio GUI has a lot of problems for developing & unit-testing custom Groovy classes in the `Keywords` folder. I'm not going to go into detail about what's wrong with Katalon Studio here. I definitely wanted to use [IntelliJ IDEA](https://www.jetbrains.com/idea/) for this job. 
+Katalon Studio GUI has problems for developing & unit-testing custom Groovy classes in the `Keywords` folder. I just wanted to use [IntelliJ IDEA](https://www.jetbrains.com/idea/), my favorite IDE, for this job. 
 
 **But, how can I combine Katalon Studio and IntelliJ IDEA?**
 

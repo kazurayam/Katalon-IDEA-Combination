@@ -1,24 +1,24 @@
-=== The blocker problem
+=== A blocker problem
 
-See the source of link:{TreeURL}/katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy[Test Cases/misc/listTestObjects]. I called `com.kms.katalon.core.configuration.RunConfiguration.getProjectDir()` to find the path of "katalon" project.
+See the source of link:{TreeURL}/katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy[Test Cases/misc/listTestObjects]. This TestCase calls `com.kms.katalon.core.configuration.RunConfiguration.getProjectDir()` to find the path of the "katalon" project.
 
 [source,groovy]
 ----
 include::../katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy[lines=10..12]
 ----
 
-When I ran this code in Katalon Studio, it printed the path of the `katalon` project folder successfully.
+When I ran this TestCase in Katalon Studio, it successfully ran and printed the path of the `katalon` project folder.
 
 [source,text]
 ----
 include::assets/testcase_output.txt[lines=3..5]
 ----
 
-Yes, `RunConfiguration.getProjectDir()` is the established way of obtaining the file path of a Katalon project's folder. It works properly in Katalon Runtime Engine as well.
+Yes, `RunConfiguration.getProjectDir()` is the established way of obtaining the OS path of a Katalon project's folder. It works properly in Katalon Runtime Engine as well.
 
 However, `RunConfiguration.getProjectDir()` does not work outside Katalon Studio. I wrote a JUnit test:
 
-- link:{TreeURL}/lib/listTestObjects/Script1746006212468.groovy[`lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationFailingTest.groovy`]
+- link:{TreeURL}/lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationFailingTest.groovy[]
 
 [source,text]
 ----
@@ -60,6 +60,6 @@ org.opentest4j.AssertionFailedError: projectDir=null ==> expected: <true> but wa
     ...
 ----
 
-The **`RunConfiguration.getProjectDir()` returned null in the `lib` subproject**!
+**The `RunConfiguration.getProjectDir()` returned null in the `lib` subproject**!
 
-This is a serious blocker for me. If my codes in the `lib` subproject can not get the path of `katalon` project folder, my codes can not get the path of `Object Repository` folder and the Test Objects at all. I am at a loss what to do in the `lib` subproject.
+This is a serious blocker for me. Without the path of `Object Repository` in the `katalon` subproject, I can not perform any unit-tests for my codes in the `lib` subproject.

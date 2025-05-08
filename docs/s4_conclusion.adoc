@@ -1,0 +1,7 @@
+== Conclusion
+
+I made a Gradle Multiproject with 2 subprojects: `katalon` and `lib`. I could develop the `lib` subproject using IntelliJ IDEA with JUnit5 and Gradle. I could export/import the jar from the `lib` into the `katalon` subproject. I could utilized the jar in the Katalon project without any problem.
+
+I believe that I could seamlessly combine Katalon Studio and IntelliJ IDEA.
+
+

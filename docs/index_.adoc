@@ -15,11 +15,6 @@ include::s2-0_RunConfiguration_getProjectDir.adoc[]
 
 include::s3_How_to_transfer_artifact_jar.adoc[]
 
-== images
-- link:images/0_rootProject_opened_in_IDEA.png[]
-- link:images/1_katalon_subproject_opened_in_GUI.png[]
+include::s4_conclusion.adoc[]
 
-== References
-
-- https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/
-- https://forum.katalon.com/t/i-cant-run-unit-tests-with-junit-in-katalon-studio/120315/9
+include::s5_extensibility.adoc[]
