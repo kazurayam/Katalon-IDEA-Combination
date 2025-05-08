@@ -697,9 +697,13 @@ However, `RunConfiguration.getProjectDir()` does not work outside Katalon Studio
 
     package com.kms.katalon.core.configuration
 
+    import org.junit.jupiter.api.Disabled
+
     import static org.junit.jupiter.api.Assertions.*
     import org.junit.jupiter.api.Test
 
+    // This test will always fail. It is intentional.
+    @Disabled
     class RunConfigurationFailingTest {
 
         @Test
@@ -900,15 +904,83 @@ When the `RunConfigurationConfigurator.configureProjectDir()` is called anywhere
 
 This test will pass, which proves that, once configured, the call to `RunConfiguration.getProjectDir()` will return the path of sibling `katalon` subproject.
 
-Provided with the `RunConfigurationConfigurator` class, I could develop good number of unit-test in the `lib` subproject while utilizing the files in the\`katalon\` as the test fixture. In fact, my codes in the `lib` subproject could get access to any resources inside the `katalon` subproject.
+Provided with the `RunConfigurationConfigurator` class, I could develop good number of unit-test in the `lib` subproject while utilizing the files in the\`katalon\` as the test fixture. In fact, my codes in the `lib` subproject could get access to any resources inside the `katalon` subproject: Test Objects, Test Case scripts, Test Listeners, Test Suites, Profiles.
 
 ## Problem3 How to transfer the `lib` artifact from into Katalon project
 
-## Conclusion
+I can generate a jar file which contains the classes developed in the `lib` subproject. Run this command:
 
-I made a Gradle Multiproject with 2 subprojects: `katalon` and `lib`. I could develop the `lib` subproject using IntelliJ IDEA with JUnit5 and Gradle. I could export/import the jar from the `lib` into the `katalon` subproject. I could utilized the jar in the Katalon project without any problem.
+    $ ./gradlew clean build
 
-I believe that I could seamlessly combine Katalon Studio and IntelliJ IDEA.
+Then, a jar will be generated in the `lib/build/libs` folder:
+
+    ~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+    tree lib/build/libs
+    lib/build/libs
+    └── my-custom-artifact-0.1.1.jar
+
+    1 directory, 1 file
+
+Now, I need to import this jar from the `lib` into the sibling `katalon` subproject in order to make my custom classes (e.g, `io.github.kazurayam.ks.testobject.ObjectRepositoryAccessor`) available to the Test Case scripts in the sibling `katalon` subproject.
+
+I made a Grable build in the `katalon` subproject.
+
+-   <https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/katalon/build.gradle>
+
+<!-- -->
+
+    plugins {
+        id 'groovy'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    ext {
+        ARTIFACT_ID = 'my-custom-artifact'
+        ARTIFACT_VERSION = '0.1.1'
+        userHome = System.getProperty('user.home')
+        rootProjectDir = rootProject.projectDir as File
+        MDSVersion = '0.1.1'
+    }
+
+
+    tasks.register('importLibArtifact') {
+        group = 'Custom'
+        description = "import the KS_ObjectRepositoryGarbageCollector jar and the MockDirectoryScanner jar into the Drivers folder"
+        doFirst {
+            delete fileTree("Drivers").matching {
+                include "${ARTIFACT_ID}-*.jar"
+            }
+        }
+        doLast {
+            copy {
+                into layout.projectDirectory.dir("Drivers")
+                from("${rootProject.projectDir}/lib/build/libs") {
+                    include "${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar"
+                }
+            }
+        }
+    }
+
+When I run the `:katalon:importLibArtifact` task, the jar file will be copied into the `Drivers` folder of the Katalon project.
+
+    ~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+    gradle :katalon:importLibArtifact
+
+    BUILD SUCCESSFUL in 1s
+    1 actionable task: 1 executed
+
+    ~/katalon-workspace/Katalon-IDEA-Combination git:[develop]
+    tree ./katalon/Drivers
+    ./katalon/Drivers
+    ├── ...
+    └── my-custom-artifact-0.1.1.jar
+
+    1 directory, 2 files
+
+I will close the Katalon project once and reopen it. Then Katalon Studio will recognize the updated jar.
 
 ## Extensibility
 
@@ -917,3 +989,9 @@ In this project, I employed IntelliJ IDEA as it is my favorite IDE. I believe th
 In this project, I used JUnit Jupiter (JUnit5) for unit-testing in the `lib` subproject. Of course, you can choose any unit-testing frameworks: JUnit4, TestNG, Spock. I suppose you can even choose Cucumber-Java, though I am not familiar with it.
 
 In this project, I wrote every classes in Groovy. In the `lib` subproject, you can write codes in other JVM-programming languages: Java, Kotlin, Scala; as long as the IDE of your choice supports it.
+
+## Conclusion
+
+I made a Gradle Multiproject with 2 subprojects: `katalon` and `lib`. I could develop a set of custom classes that extends my Katalon project’s capability in the `lib` subproject. I used IntelliJ IDEA with JUnit5 and Gradle. I could import the custom classes into the `katalon` subproject. Katalon studio could utilize the custom classes without any problem.
+
+I believe that I could seamlessly combine Katalon Studio and IntelliJ IDEA.

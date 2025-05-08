@@ -13,8 +13,8 @@ include::s1-0_How_to_resolve_dependencies.adoc[]
 
 include::s2-0_RunConfiguration_getProjectDir.adoc[]
 
-include::s3_How_to_transfer_artifact_jar.adoc[]
+include::s3_transfer_artifact.adoc[]
 
-include::s4_conclusion.adoc[]
+include::s4_extensibility.adoc[]
 
-include::s5_extensibility.adoc[]
+include::s5_conclusion.adoc[]

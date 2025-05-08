@@ -39,7 +39,8 @@ include::../lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurat
 
 This test will pass, which proves that, once configured, the call to `RunConfiguration.getProjectDir()` will return the path of sibling `katalon` subproject.
 
-Provided with the `RunConfigurationConfigurator` class, I could develop good number of unit-test in the `lib` subproject while utilizing the files in the`katalon` as the test fixture. In fact, my codes in the `lib` subproject could get access to any resources inside the `katalon` subproject.
+Provided with the `RunConfigurationConfigurator` class, I could develop good number of unit-test in the `lib` subproject while utilizing the files in the`katalon` as the test fixture. In fact, my codes in the `lib` subproject could get access to any resources inside the `katalon` subproject: Test Objects, Test Case scripts, Test Listeners, Test Suites, Profiles.
+
 
 
 
