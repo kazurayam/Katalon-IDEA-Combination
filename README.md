@@ -1,12 +1,14 @@
-# Developing Custom Classes for Katalon project using JUnit5 + Gradle + IntelliJ IDEA
+# Developing custom classes for Katalon project using JUnit5 + Gradle + IntelliJ IDEA
 
 ## Forward
 
- This article presents my know-how extending your capability to utilize Katalon Studio. I assume that you (the readers) have seasoned skill of Groovy programming with [JUnit5](https://junit.org/junit5/) and [Gradle](https://gradle.org/) build tool in [IntelliJ IDEA](https://www.jetbrains.com/idea/). If you are a non-programmer and/or new to Katalon Studio, this article would not be useful for you.
+ This article presents my know-how of extending your capability to utilize Katalon Studio. I assume that you (the readers) have seasoned skill of Groovy programming with [JUnit5](https://junit.org/junit5/) and [Gradle](https://gradle.org/) build tool in [IntelliJ IDEA](https://www.jetbrains.com/idea/). If you are a non-programmer and/or new to Katalon Studio, this article would not be useful for you.
 
 ## Problem to solve
 
-One day, I worked on a [Katalon Studio](https://katalon.com/katalon-studio) project. I wanted to find out unused Test Objects in the "Object Repository" folder in my katalon project. I knew Katalon Studio Enterprise equips the feature of [Test Object Refactoring](https://docs.katalon.com/katalon-studio/maintain-tests/refactor-test-objects-in-katalon-studio), but I don't have an Enterprise license. I only have a Free license. Therefore I started developing a set of Groovy classes that help me identifying unused TestObject. I initiated my project **KS_ObjectRepositoryGarbageCollector**. See the project of its version 0.2.6, which is already outdated, as follows:
+One day, I worked on a [Katalon Studio](https://katalon.com/katalon-studio) project. I wanted to list up out unused Test Objects in the "Object Repository" folder in my katalon project. I knew Katalon Studio Enterprise equips the feature of [Test Object Refactoring](https://docs.katalon.com/katalon-studio/maintain-tests/refactor-test-objects-in-katalon-studio), but I don't have an Enterprise license. I only have a Free license. Therefore I started developing a set of Groovy classes that help me identifying unused TestObject. I created a project [**KS_ObjectRepositoryGarbageCollector**](https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector). 
+
+See the project of its version 0.2.6, which is already outdated, as follows:
 
 - [KS_ObjectRepositoryGarbaseCollector 0.2.6](https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/tree/0.2.6)
 
@@ -54,7 +56,7 @@ $ tree Keywords | grep .groovy | wc
 
 These .groovy file comprises my library that help finding unused entries in the `Object Repository` folder.
 
-The library deserved a set of unit-tests for better quality. However, as you already know, Katalon Studio does not support performing unit-test for "Custom Keywords" using JUnit. However, as a professional programmer, I can not live without unit-testing. I introduced my "junit4ks" library to run the unit-tests for my custom Groovy classes inside Katalon Studio. See
+The library deserved a set of unit-tests for better quality. But, Katalon Studio does not support performing unit-test for "Custom Keywords" using JUnit. However, as a professional programmer, I desperately wanted to perform unit-testing. So, I introduced my "junit4ks" library to run the unit-tests for my custom Groovy classes inside Katalon Studio. See
 
 - [junit4ks](https://forum.katalon.com/t/running-junit4-in-katalon-studio/12270)
 
@@ -103,13 +105,13 @@ I ended up with over 40 .groovy classes. I could perform enough unit-tests over 
 
 **Did I enjoy that? --- No, I didn't. It was damn hard.** 
 
-Katalon Studio GUI has problems for developing & unit-testing custom Groovy classes in the `Keywords` folder. I just wanted to use [IntelliJ IDEA](https://www.jetbrains.com/idea/), my favorite IDE, for this job. 
+Katalon Studio GUI has problems for developing and unit-testing custom Groovy classes in the `Keywords` folder. Here, I am not going to go into detail what's problem. I just wanted to use [IntelliJ IDEA](https://www.jetbrains.com/idea/) for this job. 
 
 **But, how can I combine Katalon Studio and IntelliJ IDEA?**
 
 ## Solution
 
-I introduced [Gradle Multi-project](https://docs.gradle.org/current/userguide/intro_multi_project_builds.html) into the [KS_ObjectRepositoryGarbageCollection](https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/tree/master) since v0.3.0. The latest version has the following folder tree:
+I introduced [Gradle Multi-project](https://docs.gradle.org/current/userguide/intro_multi_project_builds.html) into the [KS_ObjectRepositoryGarbageCollection](https://github.com/kazurayam/KS_ObjectRepositoryGarbageCollector/tree/master) project since v0.3.0. The latest version has the following folder tree:
 
 ```
 :~/tmp/KS_ObjectRepositoryGarbageCollector ((0.4.13))
@@ -264,90 +266,17 @@ lib
 
 I moved all of `.groovy` files in the Katalon project of the v0.2.6 into the `lib` subproject; and I further developed the library. I developed my library on IntelliJ IDEA using Gradle and JUnit4.
 
-IntelliJ IDEA supports a fully functional integration with Gradle project. See [the doc](https://www.jetbrains.com/help/idea/gradle.html).
+IntelliJ IDEA supports a fully functional integration with Gradle project. It' comfortable. See [the doc](https://www.jetbrains.com/help/idea/gradle.html).
 
 ## Technical difficulties to overcome
 
 I introduced Gradle Multi-project structure with 2 subprojects `lib` and `katalon`. Soon I realized that there are several technical difficulties that I needed to overcome.
 
-### `lib` subproject depends on external jars including Katalon's
+1. In order to compile and run Groovy codes in the `lib` subproject, Groovy compiler and test runners require many external dependencies (jar files) which are included in the Katalon Studio installation folder. How can it be done?
+2. In order to run tests in the `lib` subproject, I needed to be able to read the files in the `Object Repository` folder in the `katalon` subproject. It may sound easy to do, but actually difficult.
+3. Once I finished developing Groovy classes in the `lib` supbproject, I wanto import them into the sibling `katalon` project. How can I do it?
 
-A concrete code fragment will describe things best. See the following source:
-
-- [`io.github.kazurayam.ks.testobject/ObjectRepositoryAccessor`](https://github.com/kazurayam/Katalon-IDEA-Combination/blob/develop/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy)
-
-```
-package io.github.kazurayam.ks.testobject
-...
-import com.kms.katalon.core.testobject.ObjectRepository
-import com.kms.katalon.core.testobject.TestObject
-...
-class ObjectRepositoryAccessor {
-    ...
-    static TestObject getTestObject(TestObjectId testObjectId) {
-        TestObject tObj = ObjectRepository.findTestObject(testObjectId.getValue())
-        return tObj
-    }
-    ...
-```
-
-This class is located in the `lib` subproject aside from the `katlaon` subproject. This class wants to import classes of the `com.kms.kata.core.testobject` package. Therefore, in order to compile this Groovy class, the `lib` subproject must resolve dependency to the Katalon's core jar. The Katalon's jar is not published in the Maven Central repository. It is bundled in the Katalon Studio's distributable. It is only found in the folder on my machine where I installed Katalon Studio project. 
-
-Problem 1: **How can I resolve this dependency issue?**
-
-### Unit-tests in `lib` subproject requires the `Object Repository` folder inside `katalon` subproject as test fixture
-
-See the following source of a unit-test:
-
-- [`com.kms.katalon.core.testobject.ObjectRepositoryFailingTest`](https://github.com/kazurayam/Katalon-IDEA-Combination/blob/develop/lib/src/test/groovy/com/kms/katalon/core/testobject/ObjectRepositoryFailingTest.groovy)
-
-```
-package com.kms.katalon.core.testobject
-
-import org.junit.jupiter.api.Test
-
-import static org.junit.jupiter.api.Assertions.assertNotNull
-
-class ObjectRepositoryFailingTest {
-
-    @Test
-    void test_findObject() {
-        TestObject tObj = ObjectRepository.findTestObject("Page_CuraHomepage/btn_MakeAppointment")
-        // this assertion fails
-        assertNotNull(tObj, "ObjectRepository.findTestObject() returned null")
-    }
-}
-```
-
-The source code of this unit-test class is located inside `lib` subproject aside from `katalon` subproject. This class wants to access the `Object Repository` folder in the `katalon` to get an instance of `com.kms.katalon.core.testobject.TestObject`. 
-
-When I run this test, it always fails. 
-
-Why? --- The class is not informed of the concrete path of the `Object Repository` folder in the `katalon` subproject. Therefore a call `ObjectRepository.findTestObjext(String)` fails to find the folder, and returns null. 
-
-Problem 2: **How can I tell the unit-tests in the `lib` subproject` of the `Object Repository` path inside the `katalon` subproject?**
-
-### `katalon` subproject demands the artifact of the `lib` subproject
-
-Once I could resolve the above difficulties, I would be able to create a jar in the `lib/build/libs` directory.
-
-```
-$ gradle jar
-...
-$ tree lib/build/libs
-lib/build/libs
-└── my-custom-artifact-0.1.1.jar
-```
-
-Katalon Studio does not recognize the jar file in the `lib` in the neighbourhood. Katalon Studio can only load jar files from the `Drivers` folder inside katalon project.
-
-So, I need to export/import the artifact jar from `lib` to `katalon`. Of course, I know I can manually copy & paste the file in the IntelliJ IDEA, but it's not cool. 
-
-Problem 3: **How can I export/import the jar programmatically?**
-
-## Resolution detail
-
-I have overcome all the aforementioned technical difficulties. See the [docs](https://kazurayam.github.io/Katalon-IDEA-Combination/) for know-hows.
+I have overcome all these technical difficulties. I wrote seperated document. See the [docs](https://kazurayam.github.io/Katalon-IDEA-Combination/) for detail.
 
 ## Conclusion
 
