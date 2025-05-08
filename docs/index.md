@@ -783,7 +783,7 @@ When I ran this JUnit test, it passed. This means, a call to `RunConfiguration.g
 
 ### Description
 
-I developed 2 Groovy classes in the `lib` subproject. These classes enabled to me to resolve the aforementioned problems.
+I developed 2 Groovy classes in the `lib` subproject. These classes enabled me to resolve the aforementioned problems.
 
 #### `KatalonProjectDirectoryResolver`
 
@@ -906,6 +906,14 @@ This test will pass, which proves that, once configured, the call to `RunConfigu
 
 Provided with the `RunConfigurationConfigurator` class, I could develop good number of unit-test in the `lib` subproject while utilizing the files in the\`katalon\` as the test fixture. In fact, my codes in the `lib` subproject could get access to any resources inside the `katalon` subproject: Test Objects, Test Case scripts, Test Listeners, Test Suites, Profiles.
 
+You may ask me what this line does.
+
+                RunConfiguration.setExecutionSetting(executionSettingMap)
+
+You should read the source code of the `com.kms.katalon.core.configuration.RunConfiguration` class. The source code is bundled with every Katalon Studio installation. On Windows, you would find it here:
+
+-   `<Katalon Studio installation folder>/configuration/resources/source/com.kms.katalon.core/com.kms.katalon.core-sources.jar`
+
 ## Problem3 How to transfer the `lib` artifact from into Katalon project
 
 I can generate a jar file which contains the classes developed in the `lib` subproject. Run this command:
@@ -990,7 +998,7 @@ In this project, I used JUnit Jupiter (JUnit5) for unit-testing in the `lib` sub
 
 In this project, I wrote every classes in Groovy. In the `lib` subproject, you can write codes in other JVM-programming languages: Java, Kotlin, Scala; as long as the IDE of your choice supports it.
 
-Katalon Studio v9.x once brought the "Keywords" to be an Enterprise feature. Katalon disallowed the users of Free version to create and use any custom Groovy class. It was a surprise for me. Later in v10.0 they turned the feature back. Now, I have got the experience of Katalon-IDEA-Combination, I would not be surprised even if the "Keywords" is priced again in future Katalon v11.x and later. It doesn’t matter to me.
+Katalon Studio v9.x once brought the "Keywords" to be an Enterprise feature. Katalon disallowed the users of Free version to create and use any custom Groovy class. It was a surprise for me. Later in v10.0 they turned the feature back. Now, I have got the experience of Katalon-IDEA-Combination, I would not be surprised even if the "Keywords" is priced again in future Katalon v11.x and later. It doesn’t really matter to me.
 
 ## Conclusion
 

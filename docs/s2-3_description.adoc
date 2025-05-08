@@ -1,6 +1,6 @@
 === Description
 
-I developed 2 Groovy classes in the `lib` subproject. These classes enabled to me to resolve the aforementioned problems.
+I developed 2 Groovy classes in the `lib` subproject. These classes enabled me to resolve the aforementioned problems.
 
 ==== `KatalonProjectDirectoryResolver`
 
@@ -41,6 +41,15 @@ This test will pass, which proves that, once configured, the call to `RunConfigu
 
 Provided with the `RunConfigurationConfigurator` class, I could develop good number of unit-test in the `lib` subproject while utilizing the files in the`katalon` as the test fixture. In fact, my codes in the `lib` subproject could get access to any resources inside the `katalon` subproject: Test Objects, Test Case scripts, Test Listeners, Test Suites, Profiles.
 
+You may ask me what this line does.
+[source,groovy]
+----
+            RunConfiguration.setExecutionSetting(executionSettingMap)
+----
+
+You should read the source code of the `com.kms.katalon.core.configuration.RunConfiguration` class. The source code is bundled with every Katalon Studio installation. On Windows, you would find it here:
+
+- `<Katalon Studio installation folder>/configuration/resources/source/com.kms.katalon.core/com.kms.katalon.core-sources.jar`
 
 
 
