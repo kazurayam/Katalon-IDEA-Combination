@@ -16,7 +16,7 @@ startup failed:
    ...
 ----
 
-The `org.junit.jupiter.api.Test` class belongs to the JUnit5 jar, which is not bundled in the Katalon Studio's distributable. I need to add the jar in the classpath for the `:lib:test` target.
+The `org.junit.jupiter.api.Test` class belongs to the so-called JUnit5 jar, which is not bundled in the Katalon Studio's distributable. I need to add the jar in the classpath for the `:lib:test` target.
 
 I edited the `lib/build.gradle` file:
 

@@ -1,5 +1,7 @@
 == What I want to do
 
+I made this link:{ReposURL}[Katalon-IDEA-Combination] project as a Gradle Multiproject that consists of 2 subprojects: `katalon` and `lib`. In this document, I will explain the problems I got and the solution I found.
+
 What I eventually want to achieve? Let me set the objective. In the link:{TreeURL}/katalon/[`katalon`] subproject, I wrote a test Case named `misc/listTestObjects`. Its source code is as follows:
 
 [source,groovy]

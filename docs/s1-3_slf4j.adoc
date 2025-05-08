@@ -9,10 +9,6 @@ gradle :lib:compileGroovy
 
 > Task :lib:compileGroovy FAILED
 startup failed:
-/Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 3: unable to resolve class com.kazurayam.ant.DirectoryScanner
- @ line 3, column 1.
-   import com.kazurayam.ant.DirectoryScanner
-   ^
 
 /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 6: unable to resolve class org.slf4j.Logger
  @ line 6, column 1.

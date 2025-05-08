@@ -1,5 +1,3 @@
-== `RunConfiguration.getProjectDir()` returns null outside katalon project
-
 === The blocker problem
 
 See the source of link:{TreeURL}/katalon/Scripts/misc/listTestObjects/Script1746006212468.groovy[Test Cases/misc/listTestObjects]. I called `com.kms.katalon.core.configuration.RunConfiguration.getProjectDir()` to find the path of "katalon" project.
@@ -65,44 +63,3 @@ org.opentest4j.AssertionFailedError: projectDir=null ==> expected: <true> but wa
 The **`RunConfiguration.getProjectDir()` returned null in the `lib` subproject**!
 
 This is a serious blocker for me. If my codes in the `lib` subproject can not get the path of `katalon` project folder, my codes can not get the path of `Object Repository` folder and the Test Objects at all. I am at a loss what to do in the `lib` subproject.
-
-=== The resolution
-
-I invented a magic spell: `io.github.kazurayam.ks.configuration.RunConfigurationConfigurator`. Later I will explain what it does. See how it works as in the following JUnit test:
-
-- link:{TreeURL}/lib/listTestObjects/Script1746006212468.groovy[`lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationPassingTest.groovy`]
-
-[source,text]
-----
-include::../lib/src/test/groovy/com/kms/katalon/core/configuration/RunConfigurationPassingTest.groovy[]
-----
-
-When I ran this JUnit test, it passed. This means, a call to `RunConfiguration.getProjectDir()` in a JUnit test in the `lib` subproject successfully returned the path of the `katalon` subproject. The issue has been resolved!
-
-=== Description
-
-I developed 2 tricky Groovy classes.
-
-==== KatalonProjectDirectoryResolver
-
-- link:{TreeURL}/lib/src/main/groovy/io/github/kazurayam/ks/configuration/KatalonProjectDirectoryResolver.groovy[`io.github.kazurayam.ks.configuration.KatalonProjectDirectoryResolver`]
-
-[source,groovy]
-----
-include::../lib/src/main/groovy/io/github/kazurayam/ks/configuration/KatalonProjectDirectoryResolver.groovy[]
-----
-
-The static `KatalonProjectDirectoryResolver.getProjectDir()` method will return a Path object, which is the `katalon` subproject's root folder.
-
-When the method is called inside Katalon Studio runtime, the method simply returns a non-null value returned by `RunConfiguration.getProjectDir()`. When the `RunConfiguration.getProjectDir()` returned null, the method presumes that it was invoked in the sibling `lib` subproject, and returns a path `../katalon` relative the the `lib` subproject.
-
-As you can perceive, the `KatalonProjectDirectoryResolver` is designed for limited use local to the `lib` subproject of this `Katalon-IDEA-Combination` project.
-
-
-==== RunConfigurationConfigurator
-
-
-
-
-
-

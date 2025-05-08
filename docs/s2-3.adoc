@@ -1,0 +1,23 @@
+=== Description
+
+I developed 2 tricky Groovy classes.
+
+==== `KatalonProjectDirectoryResolver`
+
+- link:{TreeURL}/lib/src/main/groovy/io/github/kazurayam/ks/configuration/KatalonProjectDirectoryResolver.groovy[`io.github.kazurayam.ks.configuration.KatalonProjectDirectoryResolver`]
+
+[source,groovy]
+----
+include::../lib/src/main/groovy/io/github/kazurayam/ks/configuration/KatalonProjectDirectoryResolver.groovy[]
+----
+
+The static `KatalonProjectDirectoryResolver.getProjectDir()` method will return a Path object, which is the `katalon` subproject's root folder.
+
+When the method is called inside Katalon Studio runtime, the method simply returns a non-null value returned by `RunConfiguration.getProjectDir()`. When the `RunConfiguration.getProjectDir()` returned null, the method presumes that it was invoked in the sibling `lib` subproject, and returns a path `../katalon` relative the the `lib` subproject.
+
+As you can perceive, the `KatalonProjectDirectoryResolver` is designed for limited use local to the `lib` subproject of this `Katalon-IDEA-Combination` project.
+
+
+==== `RunConfigurationConfigurator`
+
+

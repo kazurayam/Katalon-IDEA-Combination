@@ -9,6 +9,8 @@
 
 ## What I want to do
 
+I made this [Katalon-IDEA-Combination](https://www.github.com/kazurayam/Katalon-IDEA-Combination) project as a Gradle Multiproject that consists of 2 subprojects: `katalon` and `lib`. In this document, I will explain the problems I got and the solution I found.
+
 What I eventually want to achieve? Let me set the objective. In the [`katalon`](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/katalon/) subproject, I wrote a test Case named `misc/listTestObjects`. Its source code is as follows:
 
     import java.nio.file.Files
@@ -78,7 +80,7 @@ When I run this Test Case, it should print the absolute path Test Objects, which
 
 When I started trying to write this Test Case, I encountered a series of technical issues. I struggled for a few days. Eventually I could find resolutions. Let me present them to you one by one in the following sections.
 
-## Problem1: How to resolve external dependencies
+## Problem1: How to resolve external dependencies for `lib` subproject?
 
 ### Problem1-1 The jar of Groovy is required
 
@@ -193,10 +195,6 @@ The `:lib:compileGroovy` task continued to fail.
 
     > Task :lib:compileGroovy FAILED
     startup failed:
-    /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 3: unable to resolve class com.kazurayam.ant.DirectoryScanner
-     @ line 3, column 1.
-       import com.kazurayam.ant.DirectoryScanner
-       ^
 
     /Users/kazurayam/katalon-workspace/Katalon-IDEA-Combination/lib/src/main/groovy/io/github/kazurayam/ks/testobject/ObjectRepositoryAccessor.groovy: 6: unable to resolve class org.slf4j.Logger
      @ line 6, column 1.
@@ -285,7 +283,7 @@ I ran the following command, which failed:
        ^
        ...
 
-The `org.junit.jupiter.api.Test` class belongs to the JUnit5 jar, which is not bundled in the Katalon Studio’s distributable. I need to add the jar in the classpath for the `:lib:test` target.
+The `org.junit.jupiter.api.Test` class belongs to the so-called JUnit5 jar, which is not bundled in the Katalon Studio’s distributable. I need to add the jar in the classpath for the `:lib:test` target.
 
 I edited the `lib/build.gradle` file:
 
@@ -673,7 +671,7 @@ When I ran this, I got the following output:
     Groovy 3.0.17
     Gradle 8.4
 
-## `RunConfiguration.getProjectDir()` returns null outside katalon project
+## Problem2 `RunConfiguration.getProjectDir()` returns null outside katalon project
 
 ### The blocker problem
 
@@ -781,7 +779,7 @@ When I ran this JUnit test, it passed. This means, a call to `RunConfiguration.g
 
 I developed 2 tricky Groovy classes.
 
-#### KatalonProjectDirectoryResolver
+#### `KatalonProjectDirectoryResolver`
 
 -   [`io.github.kazurayam.ks.configuration.KatalonProjectDirectoryResolver`](https://www.github.com/kazurayam/Katalon-IDEA-Combination/tree/develop/lib/src/main/groovy/io/github/kazurayam/ks/configuration/KatalonProjectDirectoryResolver.groovy)
 
@@ -828,9 +826,9 @@ When the method is called inside Katalon Studio runtime, the method simply retur
 
 As you can perceive, the `KatalonProjectDirectoryResolver` is designed for limited use local to the `lib` subproject of this `Katalon-IDEA-Combination` project.
 
-#### RunConfigurationConfigurator
+#### `RunConfigurationConfigurator`
 
-## How to transfer artifact jar
+## Problem3 How to transfer the `lib` artifact from into Katalon project
 
 ## images
 
