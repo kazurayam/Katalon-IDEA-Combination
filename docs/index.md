@@ -914,7 +914,7 @@ You should read the source code of the `com.kms.katalon.core.configuration.RunCo
 
 -   `<Katalon Studio installation folder>/configuration/resources/source/com.kms.katalon.core/com.kms.katalon.core-sources.jar`
 
-## Problem3 How to transfer the `lib` artifact from into Katalon project
+## Problem3 How to transfer the `lib` artifact into Katalon project
 
 I can generate a jar file which contains the classes developed in the `lib` subproject. Run this command:
 
