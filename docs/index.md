@@ -1002,6 +1002,6 @@ Katalon Studio v9.x once brought the "Keywords" to be an Enterprise feature. Kat
 
 ## Conclusion
 
-I made a Gradle Multiproject with 2 subprojects: `katalon` and `lib`. I could develop a set of custom classes that extends my Katalon project’s capability in the `lib` subproject. I used IntelliJ IDEA with JUnit5 and Gradle. I could import the custom classes into the `katalon` subproject. Katalon studio could utilize the custom classes without any problem.
+I made a Gradle Multiproject with 2 subprojects: `katalon` and `lib`. In the `lib` subproject, I could develop a set of custom classes that extends my Katalon project’s capability. I used IntelliJ IDEA with JUnit5 and Gradle. I could import the custom classes into the `katalon` subproject. Katalon studio could utilize the custom classes without any problem.
 
-I believe that I could seamlessly combine Katalon Studio and IntelliJ IDEA.
+I believe that I could seamlessly combine Katalon Studio and IntelliJ IDEA. It is a lot of fun.
