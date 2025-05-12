@@ -3,6 +3,9 @@ package io.github.kazurayam.ks.configuration
 import com.kms.katalon.core.configuration.RunConfiguration
 import com.kms.katalon.core.constants.StringConstants
 
+import java.nio.file.Path
+import java.nio.file.Paths
+
 class RunConfigurationConfigurator {
 
     /**
@@ -16,13 +19,19 @@ class RunConfigurationConfigurator {
     static void configureProjectDir() {
         if (RunConfiguration.getProjectDir() == null ||
                 RunConfiguration.getProjectDir() == "null") {
+            Path katalonProjectDir = KatalonProjectDirectoryResolver.getProjectDir()
             // the code was invoked outside the Katalon Studio runtime Environment,
             // Perhaps, in the subproject `lib` next to the `katalon` project.
             // We want to configure the RunConfiguration instance to return the directory of
             // the `katalon` project
             Map<String, Object> executionSettingMap = new HashMap<>()
             executionSettingMap.put(StringConstants.CONF_PROPERTY_PROJECT_DIR,
-                    KatalonProjectDirectoryResolver.getProjectDir().toString())
+                    katalonProjectDir.toString())
+            //
+            Path logbackConfig = Paths.get(".").resolve("src/main/resources/logback-console.xml")
+            executionSettingMap.put(RunConfiguration.LOGBACK_CONFIG_FILE_LOCATION,
+                    logbackConfig.toAbsolutePath().normalize().toString())
+            //
             RunConfiguration.setExecutionSetting(executionSettingMap)
         } else {
             // the code was invoked inside the Katalon Studio runtime environment;
