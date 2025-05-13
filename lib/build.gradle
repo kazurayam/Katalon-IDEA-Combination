@@ -33,7 +33,8 @@ repositories {
 dependencies {
     implementation fileTree(dir: "${KATALON_STUDIO_INSTALLATION_DIRECTORY}/configuration/resources/lib",
             include: [
-                    "groovy-${GroovyVersion}.jar"
+                    "groovy-${GroovyVersion}.jar",
+                    'browsermob-core-*.jar'
             ]
     )
 
@@ -50,7 +51,15 @@ dependencies {
                     'com.google.gson*.jar',
                     'org.eclipse.osgi*.jar',
                     'org.apache.commons.lang*.jar',
-                    'org.seleniumhq.selenium.selenium-api*.jar'
+                    'org.seleniumhq.selenium.selenium-api*.jar',
+                    'ch.qos.logback.classic_*.jar',
+                    'ch.qos.logback.core_*.jar',
+                    'org.apache.commons.commons-io_*.jar',
+                    'javassist_*.jar',
+                    'org.greenrobot.eventbus_*.jar',
+                    'com.google.guava_*.jar',
+                    'com.fasterxml.jackson.core.jackson-core_*.jar',
+                    'com.networknt.json-schema-validator_*.jar'
             ])
 
     implementation libs.directoryscanner
